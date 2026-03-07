@@ -89,19 +89,19 @@ models:
           type: enabled
 
   # Example: Kimi K2.5 model
-  # - name: kimi-k2.5
-  #   display_name: Kimi K2.5
-  #   use: src.models.patched_deepseek:PatchedChatDeepSeek
-  #   model: kimi-k2.5
-  #   api_base: https://api.moonshot.cn/v1
-  #   api_key: $MOONSHOT_API_KEY
-  #   max_tokens: 32768
-  #   supports_thinking: true
-  #   supports_vision: true  # Check your specific model's capabilities
-  #   when_thinking_enabled:
-  #     extra_body:
-  #       thinking:
-  #         type: enabled
+  - name: kimi-k2.5
+    display_name: Kimi K2.5
+    use: src.models.patched_deepseek:PatchedChatDeepSeek
+    model: kimi-k2.5
+    api_base: https://api.moonshot.cn/v1
+    api_key: $MOONSHOT_API_KEY
+    max_tokens: 32768
+    supports_thinking: true
+    supports_vision: true  # Check your specific model's capabilities
+    when_thinking_enabled:
+      extra_body:
+        thinking:
+          type: enabled
 
 # ============================================================================
 # Tool Groups Configuration

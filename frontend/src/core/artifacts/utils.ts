@@ -1,5 +1,6 @@
-import { getBackendBaseURL } from "../config";
+import { getBackendBaseURL, getLangGraphBaseURL } from "../config";
 import type { AgentThread } from "../threads";
+import { env } from "@/env";
 
 export function urlOfArtifact({
   filepath,
@@ -10,7 +11,10 @@ export function urlOfArtifact({
   threadId: string;
   download?: boolean;
 }) {
-  return `${getBackendBaseURL()}/api/threads/${threadId}/artifacts${filepath}${download ? "?download=true" : ""}`;
+  const baseURL = env.NEXT_PUBLIC_STATIC_WEBSITE_ONLY === "true" 
+    ? getLangGraphBaseURL()
+    : getBackendBaseURL();
+  return `${baseURL}/threads/${threadId}/artifacts${filepath}${download ? "?download=true" : ""}`;
 }
 
 export function extractArtifactsFromThread(thread: AgentThread) {
@@ -18,5 +22,8 @@ export function extractArtifactsFromThread(thread: AgentThread) {
 }
 
 export function resolveArtifactURL(absolutePath: string, threadId: string) {
-  return `${getBackendBaseURL()}/api/threads/${threadId}/artifacts${absolutePath}`;
+  const baseURL = env.NEXT_PUBLIC_STATIC_WEBSITE_ONLY === "true"
+    ? getLangGraphBaseURL()
+    : getBackendBaseURL();
+  return `${baseURL}/threads/${threadId}/artifacts${absolutePath}`;
 }

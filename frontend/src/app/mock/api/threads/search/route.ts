@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-export function POST() {
+function getThreadData() {
   const threadsDir = fs.readdirSync(
     path.resolve(process.cwd(), "public/demo/threads"),
     {
@@ -23,5 +23,15 @@ export function POST() {
       return false;
     })
     .filter(Boolean);
+  return threadData;
+}
+
+export function GET() {
+  const threadData = getThreadData();
+  return Response.json(threadData);
+}
+
+export function POST() {
+  const threadData = getThreadData();
   return Response.json(threadData);
 }
