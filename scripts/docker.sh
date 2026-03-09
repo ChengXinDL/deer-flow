@@ -13,7 +13,7 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 DOCKER_DIR="$PROJECT_ROOT/docker"
 
 # Docker Compose command with project name
-COMPOSE_CMD="docker compose -p deer-flow-dev -f docker-compose-dev.yaml"
+COMPOSE_CMD="docker compose -p magic-flow-dev -f docker-compose-dev.yaml"
 
 detect_sandbox_mode() {
     local config_file="$PROJECT_ROOT/config.yaml"
@@ -73,7 +73,7 @@ trap cleanup INT TERM
 # Initialize: pre-pull the sandbox image so first Pod startup is fast
 init() {
     echo "=========================================="
-    echo "  DeerFlow Init — Pull Sandbox Image"
+    echo "  magicflow Init �?Pull Sandbox Image"
     echo "=========================================="
     echo ""
 
@@ -87,7 +87,7 @@ init() {
     fi
 
     echo ""
-    echo -e "${GREEN}✓ Sandbox image is ready.${NC}"
+    echo -e "${GREEN}�?Sandbox image is ready.${NC}"
     echo ""
     echo -e "${YELLOW}Next step: make docker-start${NC}"
 }
@@ -98,7 +98,7 @@ start() {
     local services
 
     echo "=========================================="
-    echo "  Starting DeerFlow Docker Development"
+    echo "  Starting magicflow Docker Development"
     echo "=========================================="
     echo ""
 
@@ -118,10 +118,10 @@ start() {
     fi
     echo ""
     
-    # Set DEER_FLOW_ROOT for provisioner if not already set
-    if [ -z "$DEER_FLOW_ROOT" ]; then
-        export DEER_FLOW_ROOT="$PROJECT_ROOT"
-        echo -e "${BLUE}Setting DEER_FLOW_ROOT=$DEER_FLOW_ROOT${NC}"
+    # Set MAGIC_FLOW_ROOT for provisioner if not already set
+    if [ -z "$MAGIC_FLOW_ROOT" ]; then
+        export MAGIC_FLOW_ROOT="$PROJECT_ROOT"
+        echo -e "${BLUE}Setting MAGIC_FLOW_ROOT=$MAGIC_FLOW_ROOT${NC}"
         echo ""
     fi
     
@@ -129,7 +129,7 @@ start() {
     cd "$DOCKER_DIR" && $COMPOSE_CMD up --build -d --remove-orphans $services
     echo ""
     echo "=========================================="
-    echo "  DeerFlow Docker is starting!"
+    echo "  magicflow Docker is starting!"
     echo "=========================================="
     echo ""
     echo "  🌐 Application: http://localhost:2026"
@@ -179,19 +179,19 @@ logs() {
 stop() {
     echo "Stopping Docker development services..."
     cd "$DOCKER_DIR" && $COMPOSE_CMD down
-    echo -e "${GREEN}✓ Docker services stopped${NC}"
+    echo -e "${GREEN}�?Docker services stopped${NC}"
 }
 
 # Restart Docker development environment
 restart() {
     echo "========================================"
-    echo "  Restarting DeerFlow Docker Services"
+    echo "  Restarting magicflow Docker Services"
     echo "========================================"
     echo ""
     echo -e "${BLUE}Restarting containers...${NC}"
     cd "$DOCKER_DIR" && $COMPOSE_CMD restart
     echo ""
-    echo -e "${GREEN}✓ Docker services restarted${NC}"
+    echo -e "${GREEN}�?Docker services restarted${NC}"
     echo ""
     echo "  🌐 Application: http://localhost:2026"
     echo "  📋 View logs: make docker-dev-logs"
@@ -200,7 +200,7 @@ restart() {
 
 # Show help
 help() {
-    echo "DeerFlow Docker Management Script"
+    echo "magicflow Docker Management Script"
     echo ""
     echo "Usage: $0 <command> [options]"
     echo ""
@@ -251,3 +251,4 @@ main() {
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     main "$@"
 fi
+

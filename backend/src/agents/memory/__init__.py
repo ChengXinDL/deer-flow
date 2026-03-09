@@ -1,4 +1,4 @@
-"""Memory module for DeerFlow.
+"""Memory module for magicflow.
 
 This module provides a global memory mechanism that:
 - Stores user context and conversation history in memory.json
@@ -42,3 +42,4 @@ __all__ = [
     "reload_memory_data",
     "update_memory_from_conversation",
 ]
+

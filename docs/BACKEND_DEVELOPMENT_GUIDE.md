@@ -1,13 +1,10 @@
-# DeerFlow 后端开发指南
-
-## 开发环境准备
-
+# magicflow 后端开发指�?
+## 开发环境准�?
 ### 前置要求
 
 - **Python**: 3.12+
 - **包管理器**: [uv](https://docs.astral.sh/uv/)
-- **API Keys**: OpenAI / Anthropic / DeepSeek 等
-
+- **API Keys**: OpenAI / Anthropic / DeepSeek �?
 ### 安装 uv
 
 ```bash
@@ -21,13 +18,12 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 ### 项目设置
 
 ```bash
-# 1. 进入项目根目录
-cd deer-flow
+# 1. 进入项目根目�?cdmagic-floww
 
 # 2. 复制配置文件
 cp config.example.yaml config.yaml
 
-# 3. 编辑配置，添加你的 API keys
+# 3. 编辑配置，添加你�?API keys
 # vim config.yaml
 
 # 4. 进入后端目录
@@ -45,32 +41,24 @@ make install
 # 安装依赖
 make install
 
-# 启动 LangGraph 服务器（端口 2024）
-make dev
+# 启动 LangGraph 服务器（端口 2024�?make dev
 
-# 启动 Gateway API（端口 8001）
-make gateway
+# 启动 Gateway API（端�?8001�?make gateway
 
 # 运行测试
 make test
 
-# 代码检查
-make lint
+# 代码检�?make lint
 
-# 代码格式化
-make format
+# 代码格式�?make format
 ```
 
-### 完整应用开发
-
-在项目根目录：
-
+### 完整应用开�?
+在项目根目录�?
 ```bash
-# 检查环境
-make check
+# 检查环�?make check
 
-# 安装所有依赖（前端 + 后端）
-make install
+# 安装所有依赖（前端 + 后端�?make install
 
 # 启动完整应用
 make dev
@@ -80,76 +68,57 @@ make dev
 
 ## 项目结构详解
 
-### 源代码组织
-
+### 源代码组�?
 ```
 src/
 ├── agents/                 # LangGraph Agent 系统
-│   ├── lead_agent/         # 主 Agent 实现
-│   │   ├── agent.py        # Agent 工厂函数
-│   │   └── prompt.py       # 系统提示模板
-│   ├── middlewares/        # 中间件链
-│   │   ├── thread_data_middleware.py
-│   │   ├── sandbox_middleware.py
-│   │   ├── memory_middleware.py
-│   │   └── ...
-│   ├── memory/             # 记忆系统
-│   │   ├── queue.py        # 记忆队列
-│   │   ├── updater.py      # 记忆更新器
-│   │   └── prompt.py       # 记忆提取提示
-│   └── thread_state.py     # 线程状态定义
-│
-├── gateway/                # FastAPI Gateway
-│   ├── app.py              # FastAPI 应用
-│   └── routers/            # API 路由
-│       ├── models.py       # 模型 API
-│       ├── skills.py       # 技能 API
-│       ├── memory.py       # 记忆 API
-│       └── ...
-│
-├── sandbox/                # 沙箱执行系统
-│   ├── local/              # 本地沙箱实现
-│   ├── sandbox.py          # 抽象接口
-│   ├── sandbox_provider.py # 提供者接口
-│   ├── tools.py            # 沙箱工具
-│   └── middleware.py       # 沙箱中间件
-│
-├── subagents/              # 子 Agent 系统
-│   ├── builtins/           # 内置子 Agent
-│   ├── executor.py         # 执行引擎
-│   └── registry.py         # 注册表
-│
-├── tools/                  # 工具系统
-│   └── builtins/           # 内置工具
-│
-├── mcp/                    # MCP 集成
-│   ├── client.py           # MCP 客户端
-│   ├── tools.py            # MCP 工具适配
-│   └── oauth.py            # OAuth 支持
-│
-├── skills/                 # 技能系统
-│   ├── loader.py           # 技能加载器
-│   └── parser.py           # 技能解析器
-│
-├── models/                 # 模型工厂
-│   └── factory.py          # 模型创建
-│
-├── config/                 # 配置系统
-│   ├── app_config.py       # 应用配置
-│   ├── model_config.py     # 模型配置
-│   └── ...
-│
-└── community/              # 社区工具
+�?  ├── lead_agent/         # �?Agent 实现
+�?  �?  ├── agent.py        # Agent 工厂函数
+�?  �?  └── prompt.py       # 系统提示模板
+�?  ├── middlewares/        # 中间件链
+�?  �?  ├── thread_data_middleware.py
+�?  �?  ├── sandbox_middleware.py
+�?  �?  ├── memory_middleware.py
+�?  �?  └── ...
+�?  ├── memory/             # 记忆系统
+�?  �?  ├── queue.py        # 记忆队列
+�?  �?  ├── updater.py      # 记忆更新�?�?  �?  └── prompt.py       # 记忆提取提示
+�?  └── thread_state.py     # 线程状态定�?�?├── gateway/                # FastAPI Gateway
+�?  ├── app.py              # FastAPI 应用
+�?  └── routers/            # API 路由
+�?      ├── models.py       # 模型 API
+�?      ├── skills.py       # 技�?API
+�?      ├── memory.py       # 记忆 API
+�?      └── ...
+�?├── sandbox/                # 沙箱执行系统
+�?  ├── local/              # 本地沙箱实现
+�?  ├── sandbox.py          # 抽象接口
+�?  ├── sandbox_provider.py # 提供者接�?�?  ├── tools.py            # 沙箱工具
+�?  └── middleware.py       # 沙箱中间�?�?├── subagents/              # �?Agent 系统
+�?  ├── builtins/           # 内置�?Agent
+�?  ├── executor.py         # 执行引擎
+�?  └── registry.py         # 注册�?�?├── tools/                  # 工具系统
+�?  └── builtins/           # 内置工具
+�?├── mcp/                    # MCP 集成
+�?  ├── client.py           # MCP 客户�?�?  ├── tools.py            # MCP 工具适配
+�?  └── oauth.py            # OAuth 支持
+�?├── skills/                 # 技能系�?�?  ├── loader.py           # 技能加载器
+�?  └── parser.py           # 技能解析器
+�?├── models/                 # 模型工厂
+�?  └── factory.py          # 模型创建
+�?├── config/                 # 配置系统
+�?  ├── app_config.py       # 应用配置
+�?  ├── model_config.py     # 模型配置
+�?  └── ...
+�?└── community/              # 社区工具
     ├── aio_sandbox/        # Docker 沙箱
     ├── tavily/             # 搜索工具
     ├── jina_ai/            # 网页获取
     └── ...
 ```
 
-## 核心开发模式
-
-### 1. 创建中间件
-
+## 核心开发模�?
+### 1. 创建中间�?
 ```python
 # src/agents/middlewares/my_middleware.py
 from langchain_core.runnables import RunnableConfig
@@ -163,9 +132,8 @@ class MyMiddleware:
         state: ThreadState,
         config: RunnableConfig
     ) -> ThreadState:
-        """在调用 LLM 之前执行"""
-        # 修改状态
-        state["my_field"] = "value"
+        """在调�?LLM 之前执行"""
+        # 修改状�?        state["my_field"] = "value"
         return state
 
     def after_model(
@@ -173,7 +141,7 @@ class MyMiddleware:
         state: ThreadState,
         config: RunnableConfig
     ) -> ThreadState:
-        """在调用 LLM 之后执行"""
+        """在调�?LLM 之后执行"""
         return state
 ```
 
@@ -187,9 +155,8 @@ from src.agents.thread_state import ThreadState
 @tool
 def my_tool(
     arg1: str,
-    state: ThreadState  # 注入状态
-) -> str:
-    """工具描述，会被 LLM 看到"""
+    state: ThreadState  # 注入状�?) -> str:
+    """工具描述，会�?LLM 看到"""
     # 工具逻辑
     result = f"Processed: {arg1}"
     return result
@@ -231,11 +198,10 @@ def create_chat_model(config: ModelConfig):
             api_key=config.api_key,
             temperature=config.temperature,
         )
-    # 添加其他提供商...
+    # 添加其他提供�?..
 ```
 
-## 调试技巧
-
+## 调试技�?
 ### 1. 日志调试
 
 ```python
@@ -256,7 +222,7 @@ logger.error("Error message")
 # 设置环境变量
 export LANGCHAIN_TRACING_V2=true
 export LANGCHAIN_API_KEY=your-key
-export LANGCHAIN_PROJECT=deer-flow
+export LANGCHAIN_PROJECT=magic-flow
 ```
 
 ### 3. 断点调试
@@ -265,7 +231,7 @@ export LANGCHAIN_PROJECT=deer-flow
 # 在代码中插入断点
 import pdb; pdb.set_trace()
 
-# 或使用 VS Code 调试配置
+# 或使�?VS Code 调试配置
 ```
 
 **VS Code 配置** (`.vscode/launch.json`):
@@ -286,11 +252,9 @@ import pdb; pdb.set_trace()
 }
 ```
 
-### 4. 检查线程状态
-
+### 4. 检查线程状�?
 ```python
-# 在中间件中打印状态
-print("Current state:", state)
+# 在中间件中打印状�?print("Current state:", state)
 print("Messages:", state.get("messages", []))
 print("Sandbox:", state.get("sandbox", {}))
 ```
@@ -300,8 +264,7 @@ print("Sandbox:", state.get("sandbox", {}))
 ### 运行测试
 
 ```bash
-# 运行所有测试
-make test
+# 运行所有测�?make test
 
 # 运行特定测试
 uv run pytest tests/test_specific.py -v
@@ -336,8 +299,7 @@ async def test_async_function():
 项目使用 **ruff** 进行代码检查和格式化：
 
 ```bash
-# 检查代码
-make lint
+# 检查代�?make lint
 
 # 自动修复
 make format
@@ -352,18 +314,17 @@ def process_data(
     input_data: str,
     options: Optional[Dict[str, Any]] = None
 ) -> List[str]:
-    """处理数据并返回结果列表"""
+    """处理数据并返回结果列�?""
     results: List[str] = []
     # 处理逻辑
     return results
 ```
 
-## 配置开发
-
+## 配置开�?
 ### 本地配置
 
 ```yaml
-# config.yaml (项目根目录)
+# config.yaml (项目根目�?
 models:
   - name: gpt-4o
     display_name: GPT-4o
@@ -383,7 +344,7 @@ sandbox:
 ### 环境变量
 
 ```bash
-# .env (项目根目录)
+# .env (项目根目�?
 OPENAI_API_KEY=sk-...
 ANTHROPIC_API_KEY=sk-...
 TAVILY_API_KEY=tvly-...
@@ -393,17 +354,13 @@ TAVILY_API_KEY=tvly-...
 
 ### Q: 配置文件找不到？
 
-A: 确保 `config.yaml` 在项目根目录，而不是 backend 目录：
-
+A: 确保 `config.yaml` 在项目根目录，而不�?backend 目录�?
 ```bash
-# 检查配置位置
-python -c "from src.config import get_app_config; print(get_app_config())"
+# 检查配置位�?python -c "from src.config import get_app_config; print(get_app_config())"
 ```
 
-### Q: 依赖安装失败？
-
-A: 确保使用 uv 安装：
-
+### Q: 依赖安装失败�?
+A: 确保使用 uv 安装�?
 ```bash
 # 清除缓存
 uv cache clean
@@ -414,8 +371,7 @@ make install
 
 ### Q: 端口被占用？
 
-A: 查找并关闭占用端口的进程：
-
+A: 查找并关闭占用端口的进程�?
 ```bash
 # Windows
 netstat -ano | findstr :2024
@@ -426,8 +382,7 @@ lsof -i :2024
 kill -9 <PID>
 ```
 
-### Q: 沙箱执行失败？
-
+### Q: 沙箱执行失败�?
 A: 检查沙箱配置：
 
 ```yaml
@@ -435,7 +390,7 @@ A: 检查沙箱配置：
 sandbox:
   use: src.sandbox.local:LocalSandboxProvider
 
-# 或使用 Docker 沙箱
+# 或使�?Docker 沙箱
 sandbox:
   use: src.community.aio_sandbox:AioSandboxProvider
 ```
@@ -462,17 +417,15 @@ from functools import lru_cache
 
 @lru_cache(maxsize=128)
 def expensive_operation(key: str) -> str:
-    """缓存 expensive 操作的结果"""
+    """缓存 expensive 操作的结�?""
     return compute_result(key)
 ```
 
-### 3. 连接池
-
+### 3. 连接�?
 ```python
 import httpx
 
-# 使用连接池
-async with httpx.AsyncClient() as client:
+# 使用连接�?async with httpx.AsyncClient() as client:
     response = await client.get(url)
 ```
 
@@ -482,21 +435,18 @@ async with httpx.AsyncClient() as client:
 
 ```bash
 # 构建镜像
-docker build -t deer-flow-backend .
+docker build -t magic-flow-backend .
 
 # 运行容器
 docker run -p 2024:2024 -p 8001:8001 \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
-  deer-flow-backend
+  magic-flow-backend
 ```
 
-### 生产环境检查清单
-
+### 生产环境检查清�?
 - [ ] 配置生产环境 API keys
-- [ ] 启用 Docker 沙箱（更安全）
-- [ ] 配置日志级别为 INFO
-- [ ] 设置监控和告警
-- [ ] 配置备份策略
+- [ ] 启用 Docker 沙箱（更安全�?- [ ] 配置日志级别�?INFO
+- [ ] 设置监控和告�?- [ ] 配置备份策略
 
 ## 相关资源
 
@@ -505,3 +455,4 @@ docker run -p 2024:2024 -p 8001:8001 \
 - [FastAPI 文档](https://fastapi.tiangolo.com/)
 - [Pydantic 文档](https://docs.pydantic.dev/)
 - [uv 文档](https://docs.astral.sh/uv/)
+

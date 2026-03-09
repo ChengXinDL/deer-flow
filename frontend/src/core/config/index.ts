@@ -1,4 +1,4 @@
-import { env } from "@/env";
+﻿import { env } from "@/env";
 
 export function getBackendBaseURL() {
   if (env.NEXT_PUBLIC_BACKEND_BASE_URL) {
@@ -27,3 +27,6 @@ export function getLangGraphBaseURL() {
     return "http://localhost:2026/api/langgraph";
   }
 }
+
+export * from "./agents";
+export { useAgentConfigs } from "./use-agent-configs";

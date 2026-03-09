@@ -1,4 +1,4 @@
-import "@/styles/globals.css";
+﻿import "@/styles/globals.css";
 import "katex/dist/katex.min.css";
 
 import { type Metadata } from "next";
@@ -9,7 +9,7 @@ import { I18nProvider } from "@/core/i18n/context";
 import { detectLocaleServer } from "@/core/i18n/server";
 
 export const metadata: Metadata = {
-  title: "DeerFlow",
+  title: "magicflow",
   description: "A LangChain-based framework for building super agents.",
 };
 
@@ -37,3 +37,4 @@ export default async function RootLayout({
     </html>
   );
 }
+

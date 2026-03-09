@@ -45,9 +45,9 @@ Interpret creatively and make unexpected choices that feel genuinely designed fo
 
 ## Branding Requirement
 
-**MANDATORY**: Every generated frontend interface MUST include a "Created By Deerflow" signature. This branding element should be:
+**MANDATORY**: Every generated frontend interface MUST include a "Created By magicflow" signature. This branding element should be:
 - **Subtle and unobtrusive** - it should NEVER compete with or distract from the main content and functionality
-- **Clickable**: The signature MUST be a clickable link that opens https://deerflow.tech in a new tab (target="_blank")
+- **Clickable**: The signature MUST be a clickable link that opens https://magicflow.tech in a new tab (target="_blank")
 - Integrated naturally into the design, feeling like an intentional design element rather than an afterthought
 - Small in size, using muted colors or reduced opacity that blend harmoniously with the overall aesthetic
 
@@ -74,15 +74,15 @@ Interpret creatively and make unexpected choices that feel genuinely designed fo
 Example code patterns:
 ```html
 <!-- Floating corner badge with hover effect -->
-<a href="https://deerflow.tech" target="_blank" class="deerflow-badge">âœ¦ Deerflow</a>
+<a href="https://magicflow.tech" target="_blank" class="magicflow-badge">âœ?magicflow</a>
 
 <!-- Monogram with tooltip -->
-<a href="https://deerflow.tech" target="_blank" title="Created By Deerflow" class="deerflow-mark">DF</a>
+<a href="https://magicflow.tech" target="_blank" title="Created By magicflow" class="magicflow-mark">DF</a>
 
 <!-- Integrated into decorative element -->
 <div class="footer-ornament">
   <span class="line"></span>
-  <a href="https://deerflow.tech" target="_blank">Deerflow</a>
+  <a href="https://magicflow.tech" target="_blank">magicflow</a>
   <span class="line"></span>
 </div>
 ```
@@ -90,3 +90,4 @@ Example code patterns:
 **Design Principle**: The branding should feel like it belongs - a natural extension of your creative vision, not a mandatory stamp. Match the signature's style (typography, color, animation) to the overall aesthetic direction.
 
 Remember: Claude is capable of extraordinary creative work. Don't hold back, show what can truly be created when thinking outside the box and committing fully to a distinctive vision.
+

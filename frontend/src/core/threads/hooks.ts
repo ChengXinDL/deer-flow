@@ -3,12 +3,13 @@ import type { AIMessage } from "@langchain/langgraph-sdk";
 import type { ThreadsClient } from "@langchain/langgraph-sdk/client";
 import { useStream, type UseStream } from "@langchain/langgraph-sdk/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import type { PromptInputMessage } from "@/components/ai-elements/prompt-input";
 
-import { getAPIClient } from "../api";
+import { getAPIClient, resolveGraphIdToAssistantId } from "../api";
+import { useLocalSettings } from "../settings";
 import { useUpdateSubtask } from "../tasks/context";
 import { uploadFiles } from "../uploads";
 
@@ -29,9 +30,27 @@ export function useThreadStream({
 }) {
   const queryClient = useQueryClient();
   const updateSubtask = useUpdateSubtask();
+  const [settings] = useLocalSettings();
+  const graphId = settings.agent.assistant_id;
+  const [resolvedAssistantId, setResolvedAssistantId] = useState<string | null>(null);
+  
+  useEffect(() => {
+    let isMounted = true;
+    const resolveId = async () => {
+      const assistantId = await resolveGraphIdToAssistantId(graphId);
+      if (isMounted && assistantId) {
+        setResolvedAssistantId(assistantId);
+      }
+    };
+    resolveId();
+    return () => {
+      isMounted = false;
+    };
+  }, [graphId]);
+  
   const thread = useStream<AgentThreadState>({
     client: getAPIClient(),
-    assistantId: "lead_agent",
+    assistantId: resolvedAssistantId || graphId,
     threadId: isNewThread ? undefined : threadId,
     reconnectOnMount: true,
     fetchStateHistory: { limit: 1 },
@@ -53,7 +72,6 @@ export function useThreadStream({
     },
     onFinish(state) {
       onFinish?.(state.values);
-      // void queryClient.invalidateQueries({ queryKey: ["threads", "search"] });
       queryClient.setQueriesData(
         {
           queryKey: ["threads", "search"],
@@ -76,6 +94,7 @@ export function useThreadStream({
       );
     },
   });
+  
   return thread;
 }
 
@@ -93,22 +112,18 @@ export function useSubmitThread({
   afterSubmit?: () => void;
 }) {
   const queryClient = useQueryClient();
+  const [settings] = useLocalSettings();
   const callback = useCallback(
     async (message: PromptInputMessage) => {
       const text = message.text.trim();
 
-      // Upload files first if any
       if (message.files && message.files.length > 0) {
         try {
-          // Convert FileUIPart to File objects by fetching blob URLs
           const filePromises = message.files.map(async (fileUIPart) => {
             if (fileUIPart.url && fileUIPart.filename) {
               try {
-                // Fetch the blob URL to get the file data
                 const response = await fetch(fileUIPart.url);
                 const blob = await response.blob();
-
-                // Create a File object from the blob
                 return new File([blob], fileUIPart.filename, {
                   type: fileUIPart.mediaType || blob.type,
                 });
@@ -151,6 +166,27 @@ export function useSubmitThread({
         }
       }
 
+      const configurable: Record<string, unknown> = {
+        thread_id: threadId,
+      };
+      
+      const graphId = settings.agent.assistant_id;
+      if (graphId === "sql-agent") {
+        configurable.db_url = process.env.NEXT_PUBLIC_DB_URL || "mysql+mysqlconnector://app:sykj_1234A@192.168.8.221:3307/bim_data";
+        configurable.building_id = process.env.NEXT_PUBLIC_BUILDING_ID || "335834679343";
+      }
+      
+      const submitConfig = {
+        threadId: isNewThread ? threadId! : undefined,
+        streamSubgraphs: true,
+        streamResumable: true,
+        streamMode: ["values", "messages-tuple", "custom"] as const,
+        config: {
+          recursion_limit: 1000,
+          configurable: configurable,
+        },
+      };
+
       await thread.submit(
         {
           messages: [
@@ -165,24 +201,12 @@ export function useSubmitThread({
             },
           ] as HumanMessage[],
         },
-        {
-          threadId: isNewThread ? threadId! : undefined,
-          streamSubgraphs: true,
-          streamResumable: true,
-          streamMode: ["values", "messages-tuple", "custom"],
-          config: {
-            recursion_limit: 1000,
-          },
-          context: {
-            ...threadContext,
-            thread_id: threadId,
-          },
-        },
+        submitConfig
       );
       void queryClient.invalidateQueries({ queryKey: ["threads", "search"] });
       afterSubmit?.();
     },
-    [thread, isNewThread, threadId, threadContext, queryClient, afterSubmit],
+    [thread, isNewThread, threadId, threadContext, queryClient, afterSubmit, settings],
   );
   return callback;
 }

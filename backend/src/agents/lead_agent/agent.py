@@ -93,7 +93,7 @@ def _create_todo_list_middleware(is_plan_mode: bool) -> TodoListMiddleware | Non
     if not is_plan_mode:
         return None
 
-    # Custom prompts matching DeerFlow's style
+    # Custom prompts matching magicflow's style
     system_prompt = """
 <todo_list_system>
 You have access to the `write_todos` tool to help you manage and track complex multi-step objectives.
@@ -304,3 +304,4 @@ def make_lead_agent(config: RunnableConfig):
         system_prompt=apply_prompt_template(subagent_enabled=subagent_enabled, max_concurrent_subagents=max_concurrent_subagents),
         state_schema=ThreadState,
     )
+

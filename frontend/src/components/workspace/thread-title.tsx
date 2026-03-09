@@ -1,4 +1,4 @@
-import { FlipDisplay } from "./flip-display";
+﻿import { FlipDisplay } from "./flip-display";
 
 export function ThreadTitle({
   threadTitle,

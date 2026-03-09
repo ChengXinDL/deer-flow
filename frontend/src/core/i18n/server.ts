@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+﻿import { cookies } from "next/headers";
 
 import { normalizeLocale, type Locale } from "./locale";
 

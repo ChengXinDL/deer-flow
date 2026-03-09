@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { SparklesIcon } from "lucide-react";
 import { useRouter } from "next/navigation";

@@ -1,6 +1,6 @@
-# Contributing to DeerFlow
+# Contributing to magicflow
 
-Thank you for your interest in contributing to DeerFlow! This guide will help you set up your development environment and understand our development workflow.
+Thank you for your interest in contributing to magicflow! This guide will help you set up your development environment and understand our development workflow.
 
 ## Development Environment Setup
 
@@ -74,22 +74,21 @@ make docker-logs-gateway
 
 ```
 Host Machine
-  ↓
-Docker Compose (deer-flow-dev)
-  ├→ nginx (port 2026) ← Reverse proxy
-  ├→ web (port 3000) ← Frontend with hot-reload
-  ├→ api (port 8001) ← Gateway API with hot-reload
-   ├→ langgraph (port 2024) ← LangGraph server with hot-reload
-   └→ provisioner (optional, port 8002) ← Started only in provisioner/K8s sandbox mode
+  �?Docker Compose magic-floww-dev)
+  ├→ nginx (port 2026) �?Reverse proxy
+  ├→ web (port 3000) �?Frontend with hot-reload
+  ├→ api (port 8001) �?Gateway API with hot-reload
+   ├→ langgraph (port 2024) �?LangGraph server with hot-reload
+   └→ provisioner (optional, port 8002) �?Started only in provisioner/K8s sandbox mode
 ```
 
 **Benefits of Docker Development**:
-- ✅ Consistent environment across different machines
-- ✅ No need to install Node.js, Python, or nginx locally
-- ✅ Isolated dependencies and services
-- ✅ Easy cleanup and reset
-- ✅ Hot-reload for all services
-- ✅ Production-like environment
+- �?Consistent environment across different machines
+- �?No need to install Node.js, Python, or nginx locally
+- �?Isolated dependencies and services
+- �?Easy cleanup and reset
+- �?Hot-reload for all services
+- �?Production-like environment
 
 ### Option 2: Local Development
 
@@ -169,28 +168,28 @@ The nginx configuration provides:
 ## Project Structure
 
 ```
-deer-flow/
+magic-flow/
 ├── config.example.yaml      # Configuration template
 ├── extensions_config.example.json  # MCP and Skills configuration template
 ├── Makefile                 # Build and development commands
 ├── scripts/
-│   └── docker.sh           # Docker management script
+�?  └── docker.sh           # Docker management script
 ├── docker/
-│   ├── docker-compose-dev.yaml  # Docker Compose configuration
-│   └── nginx/
-│       ├── nginx.conf      # Nginx config for Docker
-│       └── nginx.local.conf # Nginx config for local dev
+�?  ├── docker-compose-dev.yaml  # Docker Compose configuration
+�?  └── nginx/
+�?      ├── nginx.conf      # Nginx config for Docker
+�?      └── nginx.local.conf # Nginx config for local dev
 ├── backend/                 # Backend application
-│   ├── src/
-│   │   ├── gateway/        # Gateway API (port 8001)
-│   │   ├── agents/         # LangGraph agents (port 2024)
-│   │   ├── mcp/            # Model Context Protocol integration
-│   │   ├── skills/         # Skills system
-│   │   └── sandbox/        # Sandbox execution
-│   ├── docs/               # Backend documentation
-│   └── Makefile            # Backend commands
+�?  ├── src/
+�?  �?  ├── gateway/        # Gateway API (port 8001)
+�?  �?  ├── agents/         # LangGraph agents (port 2024)
+�?  �?  ├── mcp/            # Model Context Protocol integration
+�?  �?  ├── skills/         # Skills system
+�?  �?  └── sandbox/        # Sandbox execution
+�?  ├── docs/               # Backend documentation
+�?  └── Makefile            # Backend commands
 ├── frontend/               # Frontend application
-│   └── Makefile            # Frontend commands
+�?  └── Makefile            # Frontend commands
 └── skills/                 # Agent skills
     ├── public/             # Public skills
     └── custom/             # Custom skills
@@ -200,11 +199,10 @@ deer-flow/
 
 ```
 Browser
-  ↓
-Nginx (port 2026) ← Unified entry point
-  ├→ Frontend (port 3000) ← / (non-API requests)
-  ├→ Gateway API (port 8001) ← /api/models, /api/mcp, /api/skills, /api/threads/*/artifacts
-  └→ LangGraph Server (port 2024) ← /api/langgraph/* (agent interactions)
+  �?Nginx (port 2026) �?Unified entry point
+  ├→ Frontend (port 3000) �?/ (non-API requests)
+  ├→ Gateway API (port 8001) �?/api/models, /api/mcp, /api/skills, /api/threads/*/artifacts
+  └→ LangGraph Server (port 2024) �?/api/langgraph/* (agent interactions)
 ```
 
 ## Development Workflow
@@ -261,10 +259,11 @@ Every pull request runs the backend regression workflow at [.github/workflows/ba
 
 ## Need Help?
 
-- Check existing [Issues](https://github.com/bytedance/deer-flow/issues)
+- Check existing [Issues](https://github.com/bytedance/magic-flow/issues)
 - Read the [Documentation](backend/docs/)
-- Ask questions in [Discussions](https://github.com/bytedance/deer-flow/discussions)
+- Ask questions in [Discussions](https://github.com/bytedance/magic-flow/discussions)
 
 ## License
 
-By contributing to DeerFlow, you agree that your contributions will be licensed under the [MIT License](./LICENSE).
+By contributing to magicflow, you agree that your contributions will be licensed under the [MIT License](./LICENSE).
+

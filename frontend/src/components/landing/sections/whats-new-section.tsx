@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import MagicBento, { type BentoCardProps } from "@/components/ui/magic-bento";
 import { cn } from "@/lib/utils";
@@ -32,7 +32,7 @@ const features: BentoCardProps[] = [
     color: COLOR,
     label: "Persistent",
     title: "Sandbox with File System",
-    description: "Read, write, run — like a real computer",
+    description: "Read, write, run - like a real computer",
   },
   {
     color: COLOR,
@@ -52,8 +52,8 @@ export function WhatsNewSection({ className }: { className?: string }) {
   return (
     <Section
       className={cn("", className)}
-      title="Whats New in DeerFlow 2.0"
-      subtitle="DeerFlow is now evolving from a Deep Research agent into a full-stack Super Agent"
+      title="Whats New in magicflow 2.0"
+      subtitle="magicflow is now evolving from a Deep Research agent into a full-stack Super Agent"
     >
       <div className="flex w-full items-center justify-center">
         <MagicBento data={features} />
@@ -61,3 +61,4 @@ export function WhatsNewSection({ className }: { className?: string }) {
     </Section>
   );
 }
+

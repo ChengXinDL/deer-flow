@@ -1,4 +1,4 @@
-export function extractTitleFromMarkdown(markdown: string) {
+﻿export function extractTitleFromMarkdown(markdown: string) {
   if (markdown.startsWith("# ")) {
     let title = markdown.split("\n")[0]!.trim();
     if (title.startsWith("# ")) {

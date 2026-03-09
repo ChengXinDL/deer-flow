@@ -1,4 +1,4 @@
-import {
+﻿import {
   Command,
   CommandDialog,
   CommandEmpty,

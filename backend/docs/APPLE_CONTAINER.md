@@ -1,10 +1,10 @@
 # Apple Container Support
 
-DeerFlow now supports Apple Container as the preferred container runtime on macOS, with automatic fallback to Docker.
+magicflow now supports Apple Container as the preferred container runtime on macOS, with automatic fallback to Docker.
 
 ## Overview
 
-Starting with this version, DeerFlow automatically detects and uses Apple Container on macOS when available, falling back to Docker when:
+Starting with this version, magicflow automatically detects and uses Apple Container on macOS when available, falling back to Docker when:
 - Apple Container is not installed
 - Running on non-macOS platforms
 
@@ -51,8 +51,8 @@ container system start
 The `AioSandboxProvider` automatically detects the available container runtime:
 
 1. On macOS: Try `container --version`
-   - Success → Use Apple Container
-   - Failure → Fall back to Docker
+   - Success �?Use Apple Container
+   - Failure �?Fall back to Docker
 
 2. On other platforms: Use Docker directly
 
@@ -155,8 +155,8 @@ The project includes a unified cleanup script that handles both runtimes:
 
 **Usage:**
 ```bash
-# Clean up all DeerFlow sandbox containers
-./scripts/cleanup-containers.sh deer-flow-sandbox
+# Clean up all magicflow sandbox containers
+./scripts/cleanup-containers.sh magic-flow-sandbox
 
 # Custom prefix
 ./scripts/cleanup-containers.sh my-prefix
@@ -219,7 +219,7 @@ This will:
 
 2. Run cleanup script manually:
    ```bash
-   ./scripts/cleanup-containers.sh deer-flow-sandbox
+   ./scripts/cleanup-containers.sh magic-flow-sandbox
    ```
 
 ### Performance issues
@@ -236,3 +236,4 @@ This will:
 - [Apple Container GitHub](https://github.com/apple/container)
 - [Apple Container Documentation](https://github.com/apple/container/blob/main/docs/)
 - [OCI Image Spec](https://github.com/opencontainers/image-spec)
+

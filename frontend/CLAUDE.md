@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-DeerFlow Frontend is a Next.js 16 web interface for an AI agent system. It communicates with a LangGraph-based backend to provide thread-based AI conversations with streaming responses, artifacts, and a skills/tools system.
+magicflow Frontend is a Next.js 16 web interface for an AI agent system. It communicates with a LangGraph-based backend to provide thread-based AI conversations with streaming responses, artifacts, and a skills/tools system.
 
 **Stack**: Next.js 16, React 19, TypeScript 5.8, Tailwind CSS 4, pnpm 10.26.2
 
@@ -25,7 +25,7 @@ No test framework is configured.
 ## Architecture
 
 ```
-Frontend (Next.js) â”€â”€â–¶ LangGraph SDK â”€â”€â–¶ LangGraph Backend (lead_agent)
+Frontend (Next.js) â”€â”€â–?LangGraph SDK â”€â”€â–?LangGraph Backend (lead_agent)
                                               â”œâ”€â”€ Sub-Agents
                                               â””â”€â”€ Tools & Skills
 ```
@@ -34,31 +34,31 @@ The frontend is a stateful chat application. Users create **threads** (conversat
 
 ### Source Layout (`src/`)
 
-- **`app/`** â€” Next.js App Router. Routes: `/` (landing), `/workspace/chats/[thread_id]` (chat).
-- **`components/`** â€” React components split into:
-  - `ui/` â€” Shadcn UI primitives (auto-generated, ESLint-ignored)
-  - `ai-elements/` â€” Vercel AI SDK elements (auto-generated, ESLint-ignored)
-  - `workspace/` â€” Chat page components (messages, artifacts, settings)
-  - `landing/` â€” Landing page sections
-- **`core/`** â€” Business logic, the heart of the app:
-  - `threads/` â€” Thread creation, streaming, state management (hooks + types)
-  - `api/` â€” LangGraph client singleton
-  - `artifacts/` â€” Artifact loading and caching
-  - `i18n/` â€” Internationalization (en-US, zh-CN)
-  - `settings/` â€” User preferences in localStorage
-  - `memory/` â€” Persistent user memory system
-  - `skills/` â€” Skills installation and management
-  - `messages/` â€” Message processing and transformation
-  - `mcp/` â€” Model Context Protocol integration
-  - `models/` â€” TypeScript types and data models
-- **`hooks/`** â€” Shared React hooks
-- **`lib/`** â€” Utilities (`cn()` from clsx + tailwind-merge)
-- **`server/`** â€” Server-side code (better-auth, not yet active)
-- **`styles/`** â€” Global CSS with Tailwind v4 `@import` syntax and CSS variables for theming
+- **`app/`** â€?Next.js App Router. Routes: `/` (landing), `/workspace/chats/[thread_id]` (chat).
+- **`components/`** â€?React components split into:
+  - `ui/` â€?Shadcn UI primitives (auto-generated, ESLint-ignored)
+  - `ai-elements/` â€?Vercel AI SDK elements (auto-generated, ESLint-ignored)
+  - `workspace/` â€?Chat page components (messages, artifacts, settings)
+  - `landing/` â€?Landing page sections
+- **`core/`** â€?Business logic, the heart of the app:
+  - `threads/` â€?Thread creation, streaming, state management (hooks + types)
+  - `api/` â€?LangGraph client singleton
+  - `artifacts/` â€?Artifact loading and caching
+  - `i18n/` â€?Internationalization (en-US, zh-CN)
+  - `settings/` â€?User preferences in localStorage
+  - `memory/` â€?Persistent user memory system
+  - `skills/` â€?Skills installation and management
+  - `messages/` â€?Message processing and transformation
+  - `mcp/` â€?Model Context Protocol integration
+  - `models/` â€?TypeScript types and data models
+- **`hooks/`** â€?Shared React hooks
+- **`lib/`** â€?Utilities (`cn()` from clsx + tailwind-merge)
+- **`server/`** â€?Server-side code (better-auth, not yet active)
+- **`styles/`** â€?Global CSS with Tailwind v4 `@import` syntax and CSS variables for theming
 
 ### Data Flow
 
-1. User input â†’ thread hooks (`core/threads/hooks.ts`) â†’ LangGraph SDK streaming
+1. User input â†?thread hooks (`core/threads/hooks.ts`) â†?LangGraph SDK streaming
 2. Stream events update thread state (messages, artifacts, todos)
 3. TanStack Query manages server state; localStorage stores user settings
 4. Components subscribe to thread state and render updates
@@ -72,11 +72,11 @@ The frontend is a stateful chat application. Users create **threads** (conversat
 
 ## Code Style
 
-- **Imports**: Enforced ordering (builtin â†’ external â†’ internal â†’ parent â†’ sibling), alphabetized, newlines between groups. Use inline type imports: `import { type Foo }`.
+- **Imports**: Enforced ordering (builtin â†?external â†?internal â†?parent â†?sibling), alphabetized, newlines between groups. Use inline type imports: `import { type Foo }`.
 - **Unused variables**: Prefix with `_`.
 - **Class names**: Use `cn()` from `@/lib/utils` for conditional Tailwind classes.
 - **Path alias**: `@/*` maps to `src/*`.
-- **Components**: `ui/` and `ai-elements/` are generated from registries (Shadcn, MagicUI, React Bits, Vercel AI SDK) â€” don't manually edit these.
+- **Components**: `ui/` and `ai-elements/` are generated from registries (Shadcn, MagicUI, React Bits, Vercel AI SDK) â€?don't manually edit these.
 
 ## Environment
 
@@ -87,3 +87,4 @@ NEXT_PUBLIC_LANGGRAPH_BASE_URL=http://localhost:2024
 ```
 
 Requires Node.js 22+ and pnpm 10.26.2+.
+

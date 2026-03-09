@@ -1,7 +1,6 @@
-# DeerFlow 前端故障排除指南
+# magicflow 前端故障排除指南
 
-## 开发环境问题
-
+## 开发环境问�?
 ### 1. 安装依赖失败
 
 **问题**: `pnpm install` 报错
@@ -18,8 +17,7 @@ rm -rf node_modules
 pnpm install
 ```
 
-### 2. 端口被占用
-
+### 2. 端口被占�?
 **问题**: `Error: Port 3000 is already in use`
 
 **解决方案**:
@@ -28,8 +26,7 @@ pnpm install
 netstat -ano | findstr :3000
 taskkill /PID <PID> /F
 
-# 或使用其他端口
-pnpm dev -- -p 3001
+# 或使用其他端�?pnpm dev -- -p 3001
 ```
 
 ### 3. 热更新不生效
@@ -64,8 +61,7 @@ pnpm dev
 
 **解决方案**:
 ```bash
-# 运行类型检查
-pnpm typecheck
+# 运行类型检�?pnpm typecheck
 
 # 查看详细错误
 pnpm typecheck 2>&1 | head -50
@@ -73,13 +69,11 @@ pnpm typecheck 2>&1 | head -50
 
 **常见类型错误**:
 - 缺少类型定义: `npm install -D @types/package-name`
-- 类型不兼容: 检查接口定义
-- 隐式 any: 添加类型注解
+- 类型不兼�? 检查接口定�?- 隐式 any: 添加类型注解
 
 ### 2. ESLint 错误
 
-**问题**: 代码风格检查失败
-
+**问题**: 代码风格检查失�?
 **解决方案**:
 ```bash
 # 自动修复
@@ -98,12 +92,10 @@ pnpm lint
 # 复制环境变量模板
 cp .env.example .env
 
-# 或跳过验证（Docker 构建）
-SKIP_ENV_VALIDATION=1 pnpm build
+# 或跳过验证（Docker 构建�?SKIP_ENV_VALIDATION=1 pnpm build
 ```
 
-### 4. 静态导出失败
-
+### 4. 静态导出失�?
 **问题**: `Image optimization failed`
 
 **解决方案**:
@@ -120,21 +112,19 @@ const config = {
 
 ### 1. Demo 数据无法加载
 
-**问题**: 前端页面空白，无法显示 Demo 线程
+**问题**: 前端页面空白，无法显�?Demo 线程
 
 **排查步骤**:
-1. 检查环境变量配置
-   ```bash
+1. 检查环境变量配�?   ```bash
    # 查看 .env 文件
    cat frontend/.env | grep STATIC_WEBSITE_ONLY
    # 应该显示: NEXT_PUBLIC_STATIC_WEBSITE_ONLY="true"
    ```
 
-2. 检查前端日志
-   ```bash
+2. 检查前端日�?   ```bash
    # 查看请求路径
    # 应该看到: GET /mock/api/threads/search 200
-   # 不应该看到: GET /api/langgraph/threads/search
+   # 不应该看�? GET /api/langgraph/threads/search
    ```
 
 3. 测试 Mock API
@@ -148,7 +138,7 @@ const config = {
 # 1. 设置环境变量
 echo 'NEXT_PUBLIC_STATIC_WEBSITE_ONLY="true"' >> frontend/.env
 
-# 2. 注释掉后端 URL
+# 2. 注释掉后�?URL
 # NEXT_PUBLIC_BACKEND_BASE_URL="http://localhost:8001"
 
 # 3. 重启前端服务
@@ -157,36 +147,30 @@ pnpm dev
 
 ### 2. 文件产物无法显示
 
-**问题**: 图片、文档等文件无法显示，请求返回 404
+**问题**: 图片、文档等文件无法显示，请求返�?404
 
 **排查步骤**:
-1. 检查请求路径
-   ```bash
-   # 错误路径（指向后端 API）
-   GET /api/threads/{thread_id}/artifacts/...
+1. 检查请求路�?   ```bash
+   # 错误路径（指向后�?API�?   GET /api/threads/{thread_id}/artifacts/...
    
-   # 正确路径（指向 Mock API）
-   GET /mock/api/threads/{thread_id}/artifacts/...
+   # 正确路径（指�?Mock API�?   GET /mock/api/threads/{thread_id}/artifacts/...
    ```
 
 2. 测试文件产物 API
    ```bash
    curl http://localhost:3002/mock/api/threads/{thread_id}/artifacts/mnt/user-data/outputs/{filename}
-   # 应该返回 200 状态码和文件内容
-   ```
+   # 应该返回 200 状态码和文件内�?   ```
 
-3. 检查文件是否存在
-   ```bash
+3. 检查文件是否存�?   ```bash
    ls frontend/public/demo/threads/{thread_id}/user-data/outputs/
    ```
 
 **解决方案**:
 
-修改 `frontend/src/core/artifacts/utils.ts`：
-
+修改 `frontend/src/core/artifacts/utils.ts`�?
 ```typescript
 export function urlOfArtifact({ filepath, threadId, download = false }) {
-  // 关键：Demo 模式下使用 getLangGraphBaseURL()
+  // 关键：Demo 模式下使�?getLangGraphBaseURL()
   const baseURL = env.NEXT_PUBLIC_STATIC_WEBSITE_ONLY === "true" 
     ? getLangGraphBaseURL()
     : getBackendBaseURL();
@@ -203,10 +187,9 @@ export function urlOfArtifact({ filepath, threadId, download = false }) {
 
 **解决方案**:
 
-修改 `frontend/src/app/mock/api/threads/search/route.ts`：
-
+修改 `frontend/src/app/mock/api/threads/search/route.ts`�?
 ```typescript
-// 同时支持 GET 和 POST 方法
+// 同时支持 GET �?POST 方法
 export function GET() {
   return Response.json(getThreadData());
 }
@@ -216,16 +199,13 @@ export function POST() {
 }
 ```
 
-### 4. 环境变量未生效
-
-**问题**: 修改 `.env` 文件后，前端行为未改变
-
+### 4. 环境变量未生�?
+**问题**: 修改 `.env` 文件后，前端行为未改�?
 **原因**: Next.js 在启动时读取环境变量，运行时修改不会生效
 
 **解决方案**:
 ```bash
-# 1. 停止开发服务器（Ctrl+C）
-
+# 1. 停止开发服务器（Ctrl+C�?
 # 2. 修改 .env 文件
 
 # 3. 重新启动
@@ -239,8 +219,7 @@ pnpm dev
 **排查步骤**:
 1. 检查路径映射逻辑
    ```typescript
-   // 在 Mock API 路由中添加日志
-   console.log("Original path:", artifactPath);
+   // �?Mock API 路由中添加日�?   console.log("Original path:", artifactPath);
    console.log("Resolved path:", resolvedPath);
    console.log("File exists:", fs.existsSync(resolvedPath));
    ```
@@ -253,11 +232,9 @@ pnpm dev
 
 **解决方案**:
 
-检查 `frontend/src/app/mock/api/threads/[thread_id]/artifacts/[[...artifact_path]]/route.ts`：
-
+检�?`frontend/src/app/mock/api/threads/[thread_id]/artifacts/[[...artifact_path]]/route.ts`�?
 ```typescript
-// 正确的路径映射
-if (artifactPath.startsWith("mnt/")) {
+// 正确的路径映�?if (artifactPath.startsWith("mnt/")) {
   artifactPath = path.resolve(
     process.cwd(),
     artifactPath.replace("mnt/", `public/demo/threads/${threadId}/`)
@@ -267,13 +244,11 @@ if (artifactPath.startsWith("mnt/")) {
 
 ### 6. Demo 模式下输入框应该禁用
 
-**问题**: Demo 模式下用户仍然可以输入内容
-
+**问题**: Demo 模式下用户仍然可以输入内�?
 **验证**: 检查输入框是否显示禁用提示
 
 ```typescript
-// 在 InputBox 组件中
-disabled={env.NEXT_PUBLIC_STATIC_WEBSITE_ONLY === "true"}
+// �?InputBox 组件�?disabled={env.NEXT_PUBLIC_STATIC_WEBSITE_ONLY === "true"}
 
 // 显示提示信息
 {env.NEXT_PUBLIC_STATIC_WEBSITE_ONLY === "true" && (
@@ -283,10 +258,8 @@ disabled={env.NEXT_PUBLIC_STATIC_WEBSITE_ONLY === "true"}
 )}
 ```
 
-### 7. Demo 线程数量过多导致加载慢
-
-**问题**: Demo 线程太多，首次加载时间过长
-
+### 7. Demo 线程数量过多导致加载�?
+**问题**: Demo 线程太多，首次加载时间过�?
 **解决方案**:
 1. 减少线程数量
    ```bash
@@ -296,59 +269,47 @@ disabled={env.NEXT_PUBLIC_STATIC_WEBSITE_ONLY === "true"}
 
 2. 优化 thread.json 文件大小
    ```bash
-   # 检查文件大小
-   du -h frontend/public/demo/threads/*/thread.json
+   # 检查文件大�?   du -h frontend/public/demo/threads/*/thread.json
    
-   # 如果太大，考虑分页或延迟加载
-   ```
+   # 如果太大，考虑分页或延迟加�?   ```
 
-### 8. Demo 模式检查清单
-
-在配置 Demo 模式时，按以下顺序检查：
+### 8. Demo 模式检查清�?
+在配�?Demo 模式时，按以下顺序检查：
 
 - [ ] `.env` 文件中设置了 `NEXT_PUBLIC_STATIC_WEBSITE_ONLY="true"`
-- [ ] 注释掉了 `NEXT_PUBLIC_BACKEND_BASE_URL` 和 `NEXT_PUBLIC_LANGGRAPH_BASE_URL`
-- [ ] 重启了前端服务
-- [ ] 日志显示请求 `/mock/api/threads/search`
-- [ ] 文件产物 URL 使用了 `/mock/api/threads/{thread_id}/artifacts/...`
-- [ ] Demo 线程和文件产物可以正常显示
-- [ ] 输入框被禁用并显示提示信息
-
+- [ ] 注释掉了 `NEXT_PUBLIC_BACKEND_BASE_URL` �?`NEXT_PUBLIC_LANGGRAPH_BASE_URL`
+- [ ] 重启了前端服�?- [ ] 日志显示请求 `/mock/api/threads/search`
+- [ ] 文件产物 URL 使用�?`/mock/api/threads/{thread_id}/artifacts/...`
+- [ ] Demo 线程和文件产物可以正常显�?- [ ] 输入框被禁用并显示提示信�?
 **相关文档**:
 - [前端 Demo 模式完整指南](./FRONTEND_DEMO_MODE_GUIDE.md)
 - [Demo 模式配置问题修复记录](./FRONTEND_DEMO_MODE_FIX.md)
 
-## 运行时问题
-
+## 运行时问�?
 ### 1. 白屏/空白页面
 
 **排查步骤**:
-1. 检查浏览器控制台错误
-2. 检查网络请求是否成功
-3. 检查 React 错误边界
+1. 检查浏览器控制台错�?2. 检查网络请求是否成�?3. 检�?React 错误边界
 
 **常见原因**:
-- 客户端组件缺少 `'use client'`
-- 服务端组件使用了浏览器 API
+- 客户端组件缺�?`'use client'`
+- 服务端组件使用了浏览�?API
 - 无限循环导致页面卡死
 
 ### 2. API 请求失败
 
-**问题**: 无法连接到后端
-
+**问题**: 无法连接到后�?
 **排查步骤**:
-1. 检查后端服务是否运行
-   ```bash
+1. 检查后端服务是否运�?   ```bash
    curl http://localhost:8001/health
    ```
 
-2. 检查 nginx 配置
+2. 检�?nginx 配置
    ```bash
    nginx -t
    ```
 
-3. 检查环境变量
-   ```bash
+3. 检查环境变�?   ```bash
    # 确认 .env 配置
    NEXT_PUBLIC_BACKEND_BASE_URL=http://localhost:8001
    ```
@@ -365,8 +326,7 @@ const fetchData = async () => {
     return await response.json();
   } catch (error) {
     console.error('API Error:', error);
-    // 显示用户友好的错误消息
-    throw error;
+    // 显示用户友好的错误消�?    throw error;
   }
 };
 ```
@@ -376,9 +336,7 @@ const fetchData = async () => {
 **问题**: AI 回复突然停止
 
 **排查步骤**:
-1. 检查浏览器控制台网络请求
-2. 检查后端日志
-3. 检查 nginx 超时配置
+1. 检查浏览器控制台网络请�?2. 检查后端日�?3. 检�?nginx 超时配置
 
 **解决方案**:
 ```nginx
@@ -389,20 +347,17 @@ proxy_send_timeout 300s;
 
 ### 4. 状态不更新
 
-**问题**: 数据修改后 UI 不更新
-
+**问题**: 数据修改�?UI 不更�?
 **排查步骤**:
 1. 检查状态更新逻辑
-2. 检查组件重新渲染
-3. 检查 TanStack Query 缓存
+2. 检查组件重新渲�?3. 检�?TanStack Query 缓存
 
 **解决方案**:
 ```typescript
 // 强制刷新
 queryClient.invalidateQueries({ queryKey: ['data'] });
 
-// 或禁用缓存
-const { data } = useQuery({
+// 或禁用缓�?const { data } = useQuery({
   queryKey: ['data'],
   queryFn: fetchData,
   staleTime: 0,
@@ -412,8 +367,7 @@ const { data } = useQuery({
 
 ## 性能问题
 
-### 1. 页面加载慢
-
+### 1. 页面加载�?
 **排查工具**:
 - Lighthouse
 - Chrome DevTools Performance
@@ -421,8 +375,7 @@ const { data } = useQuery({
 
 **优化方案**:
 ```typescript
-// 1. 使用动态导入
-const HeavyComponent = dynamic(() => import('./HeavyComponent'), {
+// 1. 使用动态导�?const HeavyComponent = dynamic(() => import('./HeavyComponent'), {
   loading: () => <Skeleton />,
 });
 
@@ -440,8 +393,7 @@ const module = await import('./module');
 
 **排查方法**:
 1. Chrome DevTools Memory 标签
-2. 记录堆快照对比
-3. 检查事件监听器
+2. 记录堆快照对�?3. 检查事件监听器
 
 **常见原因**:
 - 未清理的 setInterval/setTimeout
@@ -489,10 +441,8 @@ import { VirtualList } from '@/components/ui/virtual-list';
 ### 1. Tailwind 类不生效
 
 **排查步骤**:
-1. 检查 Tailwind 配置
-2. 检查类名拼写
-3. 检查 CSS 优先级
-
+1. 检�?Tailwind 配置
+2. 检查类名拼�?3. 检�?CSS 优先�?
 **解决方案**:
 ```typescript
 // 使用 cn() 工具函数
@@ -505,12 +455,11 @@ className={cn(
 )}
 ```
 
-### 2. 主题切换不生效
-
+### 2. 主题切换不生�?
 **排查步骤**:
-1. 检查 ThemeProvider 配置
-2. 检查 CSS 变量
-3. 检查 localStorage
+1. 检�?ThemeProvider 配置
+2. 检�?CSS 变量
+3. 检�?localStorage
 
 **解决方案**:
 ```typescript
@@ -526,31 +475,27 @@ setTimeout(() => setTheme('dark'), 0);
 ```bash
 # Chrome DevTools
 1. 打开 DevTools
-2. 按 Ctrl+Shift+M 切换设备模拟
+2. �?Ctrl+Shift+M 切换设备模拟
 3. 选择不同设备测试
 ```
 
-## 浏览器兼容性问题
-
+## 浏览器兼容性问�?
 ### 1. 新特性不支持
 
-**问题**: 某些浏览器功能报错
-
+**问题**: 某些浏览器功能报�?
 **解决方案**:
 ```typescript
-// 特性检测
-if ('IntersectionObserver' in window) {
+// 特性检�?if ('IntersectionObserver' in window) {
   // 使用 IntersectionObserver
 } else {
   // 降级方案
 }
 
-// 或使用 polyfill
+// 或使�?polyfill
 import 'intersection-observer';
 ```
 
-### 2. CSS 兼容性问题
-
+### 2. CSS 兼容性问�?
 **解决方案**:
 ```css
 /* 使用 autoprefixer */
@@ -560,10 +505,8 @@ import 'intersection-observer';
 }
 ```
 
-## 调试技巧
-
-### 1. 控制台调试
-
+## 调试技�?
+### 1. 控制台调�?
 ```typescript
 // 条件断点
 console.log('Debug:', data);
@@ -586,15 +529,14 @@ console.timeEnd('operation');
 ### 2. React DevTools
 
 - 检查组件树
-- 查看 Props 和 State
+- 查看 Props �?State
 - 分析渲染性能
-- 检查 Context
+- 检�?Context
 
 ### 3. 网络调试
 
 ```bash
-# 查看所有请求
-# Chrome DevTools > Network
+# 查看所有请�?# Chrome DevTools > Network
 
 # 过滤特定请求
 # 使用 Filter: domain:localhost:8001
@@ -626,8 +568,7 @@ console.timeEnd('operation');
 
 ## 日志收集
 
-### 1. 客户端日志
-
+### 1. 客户端日�?
 ```typescript
 // 全局错误捕获
 window.onerror = (message, source, lineno, colno, error) => {
@@ -640,11 +581,9 @@ window.onunhandledrejection = (event) => {
 };
 ```
 
-### 2. 服务端日志
-
+### 2. 服务端日�?
 ```typescript
-// 服务端组件日志
-import { logger } from '@/lib/logger';
+// 服务端组件日�?import { logger } from '@/lib/logger';
 
 export default async function ServerComponent() {
   logger.info('Rendering server component');
@@ -654,8 +593,7 @@ export default async function ServerComponent() {
 
 ## 获取帮助
 
-### 1. 检查文档
-
+### 1. 检查文�?
 - [Next.js 文档](https://nextjs.org/docs)
 - [React 文档](https://react.dev/)
 - [Tailwind CSS 文档](https://tailwindcss.com/docs)
@@ -675,5 +613,6 @@ make docker-logs-gateway
 
 ### 3. 社区支持
 
-- GitHub Issues: https://github.com/bytedance/deer-flow/issues
-- 官方文档: https://deerflow.tech/
+- GitHub Issues: https://github.com/bytedance/magic-flow/issues
+- 官方文档: https://magicflow.tech/
+

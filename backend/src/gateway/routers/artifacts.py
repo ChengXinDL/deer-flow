@@ -124,7 +124,7 @@ async def get_artifact(thread_id: str, path: str, request: Request) -> FileRespo
         # Default to plain text for unknown types that look like text
         try:
             return PlainTextResponse(content=content.decode("utf-8"), media_type="text/plain", headers=cache_headers)
-        except UnicodeDecodeError:
+        except UnicodeDecoMAGICror:
             return Response(content=content, media_type=mime_type or "application/octet-stream", headers=cache_headers)
 
     actual_path = resolve_thread_virtual_path(thread_id, path)

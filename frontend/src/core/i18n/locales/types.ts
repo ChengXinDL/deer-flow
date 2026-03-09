@@ -1,4 +1,4 @@
-import type { LucideIcon } from "lucide-react";
+﻿import type { LucideIcon } from "lucide-react";
 
 export interface Translations {
   // Locale meta
@@ -173,6 +173,7 @@ export interface Translations {
     title: string;
     description: string;
     sections: {
+      agent: string;
       appearance: string;
       memory: string;
       tools: string;

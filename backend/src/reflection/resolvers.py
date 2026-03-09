@@ -21,7 +21,7 @@ def _build_missing_dependency_hint(module_path: str, err: ImportError) -> str:
 
     return (
         f"Missing dependency '{missing_module}'. "
-        f"Install it with `uv add {package_name}` (or `pip install {package_name}`), then restart DeerFlow."
+        f"Install it with `uv add {package_name}` (or `pip install {package_name}`), then restart magicflow."
     )
 
 
@@ -96,3 +96,4 @@ def resolve_class[T](class_path: str, base_class: type[T] | None = None) -> type
         raise ValueError(f"{class_path} is not a subclass of {base_class.__name__}")
 
     return model_class
+

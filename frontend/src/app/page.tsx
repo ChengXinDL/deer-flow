@@ -1,4 +1,4 @@
-import { Footer } from "@/components/landing/footer";
+﻿import { Footer } from "@/components/landing/footer";
 import { Header } from "@/components/landing/header";
 import { Hero } from "@/components/landing/hero";
 import { CaseStudySection } from "@/components/landing/sections/case-study-section";

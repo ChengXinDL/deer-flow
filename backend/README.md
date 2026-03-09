@@ -1,43 +1,19 @@
-# DeerFlow Backend
+# magicflow Backend
 
-DeerFlow is a LangGraph-based AI super agent with sandbox execution, persistent memory, and extensible tool integration. The backend enables AI agents to execute code, browse the web, manage files, delegate tasks to subagents, and retain context across conversations - all in isolated, per-thread environments.
+magicflow is a LangGraph-based AI super agent with sandbox execution, persistent memory, and extensible tool integration. The backend enables AI agents to execute code, browse the web, manage files, delegate tasks to subagents, and retain context across conversations - all in isolated, per-thread environments.
 
 ---
 
 ## Architecture
 
 ```
-                        ┌──────────────────────────────────────┐
-                        │          Nginx (Port 2026)           │
-                        │      Unified reverse proxy           │
-                        └───────┬──────────────────┬───────────┘
-                                │                  │
-              /api/langgraph/*  │                  │  /api/* (other)
-                                ▼                  ▼
-               ┌────────────────────┐  ┌────────────────────────┐
-               │ LangGraph Server   │  │   Gateway API (8001)   │
-               │    (Port 2024)     │  │   FastAPI REST         │
-               │                    │  │                        │
-               │ ┌────────────────┐ │  │ Models, MCP, Skills,   │
-               │ │  Lead Agent    │ │  │ Memory, Uploads,       │
-               │ │  ┌──────────┐  │ │  │ Artifacts              │
-               │ │  │Middleware│  │ │  └────────────────────────┘
-               │ │  │  Chain   │  │ │
-               │ │  └──────────┘  │ │
-               │ │  ┌──────────┐  │ │
-               │ │  │  Tools   │  │ │
-               │ │  └──────────┘  │ │
-               │ │  ┌──────────┐  │ │
-               │ │  │Subagents │  │ │
-               │ │  └──────────┘  │ │
-               │ └────────────────┘ │
-               └────────────────────┘
-```
+                        ┌──────────────────────────────────────�?                        �?         Nginx (Port 2026)           �?                        �?     Unified reverse proxy           �?                        └───────┬──────────────────┬───────────�?                                �?                 �?              /api/langgraph/*  �?                 �? /api/* (other)
+                                �?                 �?               ┌────────────────────�? ┌────────────────────────�?               �?LangGraph Server   �? �?  Gateway API (8001)   �?               �?   (Port 2024)     �? �?  FastAPI REST         �?               �?                   �? �?                       �?               �?┌────────────────�?�? �?Models, MCP, Skills,   �?               �?�? Lead Agent    �?�? �?Memory, Uploads,       �?               �?�? ┌──────────�? �?�? �?Artifacts              �?               �?�? │Middleware�? �?�? └────────────────────────�?               �?�? �? Chain   �? �?�?               �?�? └──────────�? �?�?               �?�? ┌──────────�? �?�?               �?�? �? Tools   �? �?�?               �?�? └──────────�? �?�?               �?�? ┌──────────�? �?�?               �?�? │Subagents �? �?�?               �?�? └──────────�? �?�?               �?└────────────────�?�?               └────────────────────�?```
 
 **Request Routing** (via Nginx):
-- `/api/langgraph/*` → LangGraph Server - agent interactions, threads, streaming
-- `/api/*` (other) → Gateway API - models, MCP, skills, memory, artifacts, uploads
-- `/` (non-API) → Frontend - Next.js web interface
+- `/api/langgraph/*` �?LangGraph Server - agent interactions, threads, streaming
+- `/api/*` (other) �?Gateway API - models, MCP, skills, memory, artifacts, uploads
+- `/` (non-API) �?Frontend - Next.js web interface
 
 ---
 
@@ -75,8 +51,8 @@ Per-thread isolated execution with virtual path translation:
 
 - **Abstract interface**: `execute_command`, `read_file`, `write_file`, `list_dir`
 - **Providers**: `LocalSandboxProvider` (filesystem) and `AioSandboxProvider` (Docker, in community/)
-- **Virtual paths**: `/mnt/user-data/{workspace,uploads,outputs}` → thread-specific physical directories
-- **Skills path**: `/mnt/skills` → `deer-flow/skills/` directory
+- **Virtual paths**: `/mnt/user-data/{workspace,uploads,outputs}` �?thread-specific physical directories
+- **Skills path**: `/mnt/skills` �?magic-floww/skills/` directory
 - **Skills loading**: Recursively discovers nested `SKILL.md` files under `skills/{public,custom}` and preserves nested container paths
 - **Tools**: `bash`, `ls`, `read_file`, `write_file`, `str_replace`
 
@@ -87,7 +63,7 @@ Async task delegation with concurrent execution:
 - **Built-in agents**: `general-purpose` (full toolset) and `bash` (command specialist)
 - **Concurrency**: Max 3 subagents per turn, 15-minute timeout
 - **Execution**: Background thread pools with status tracking and SSE events
-- **Flow**: Agent calls `task()` tool → executor runs subagent in background → polls for completion → returns result
+- **Flow**: Agent calls `task()` tool �?executor runs subagent in background �?polls for completion �?returns result
 
 ### Memory System
 
@@ -140,7 +116,7 @@ FastAPI application providing REST endpoints for frontend integration:
 ### Installation
 
 ```bash
-cd deer-flow
+cd magic-flow
 
 # Copy configuration files
 cp config.example.yaml config.yaml
@@ -200,31 +176,31 @@ Direct access: LangGraph at http://localhost:2024, Gateway at http://localhost:8
 ```
 backend/
 ├── src/
-│   ├── agents/                  # Agent system
-│   │   ├── lead_agent/         # Main agent (factory, prompts)
-│   │   ├── middlewares/        # 9 middleware components
-│   │   ├── memory/             # Memory extraction & storage
-│   │   └── thread_state.py    # ThreadState schema
-│   ├── gateway/                # FastAPI Gateway API
-│   │   ├── app.py             # Application setup
-│   │   └── routers/           # 6 route modules
-│   ├── sandbox/                # Sandbox execution
-│   │   ├── local/             # Local filesystem provider
-│   │   ├── sandbox.py         # Abstract interface
-│   │   ├── tools.py           # bash, ls, read/write/str_replace
-│   │   └── middleware.py      # Sandbox lifecycle
-│   ├── subagents/              # Subagent delegation
-│   │   ├── builtins/          # general-purpose, bash agents
-│   │   ├── executor.py        # Background execution engine
-│   │   └── registry.py        # Agent registry
-│   ├── tools/builtins/         # Built-in tools
-│   ├── mcp/                    # MCP protocol integration
-│   ├── models/                 # Model factory
-│   ├── skills/                 # Skill discovery & loading
-│   ├── config/                 # Configuration system
-│   ├── community/              # Community tools & providers
-│   ├── reflection/             # Dynamic module loading
-│   └── utils/                  # Utilities
+�?  ├── agents/                  # Agent system
+�?  �?  ├── lead_agent/         # Main agent (factory, prompts)
+�?  �?  ├── middlewares/        # 9 middleware components
+�?  �?  ├── memory/             # Memory extraction & storage
+�?  �?  └── thread_state.py    # ThreadState schema
+�?  ├── gateway/                # FastAPI Gateway API
+�?  �?  ├── app.py             # Application setup
+�?  �?  └── routers/           # 6 route modules
+�?  ├── sandbox/                # Sandbox execution
+�?  �?  ├── local/             # Local filesystem provider
+�?  �?  ├── sandbox.py         # Abstract interface
+�?  �?  ├── tools.py           # bash, ls, read/write/str_replace
+�?  �?  └── middleware.py      # Sandbox lifecycle
+�?  ├── subagents/              # Subagent delegation
+�?  �?  ├── builtins/          # general-purpose, bash agents
+�?  �?  ├── executor.py        # Background execution engine
+�?  �?  └── registry.py        # Agent registry
+�?  ├── tools/builtins/         # Built-in tools
+�?  ├── mcp/                    # MCP protocol integration
+�?  ├── models/                 # Model factory
+�?  ├── skills/                 # Skill discovery & loading
+�?  ├── config/                 # Configuration system
+�?  ├── community/              # Community tools & providers
+�?  ├── reflection/             # Dynamic module loading
+�?  └── utils/                  # Utilities
 ├── docs/                       # Documentation
 ├── tests/                      # Test suite
 ├── langgraph.json              # LangGraph server configuration
@@ -254,7 +230,7 @@ Key sections:
 
 Provider note:
 - `models[*].use` references provider classes by module path (for example `langchain_openai:ChatOpenAI`).
-- If a provider module is missing, DeerFlow now returns an actionable error with install guidance (for example `uv add langchain-google-genai`).
+- If a provider module is missing, magicflow now returns an actionable error with install guidance (for example `uv add langchain-google-genai`).
 
 ### Extensions Configuration (`extensions_config.json`)
 
@@ -291,8 +267,8 @@ MCP servers and skill states in a single file:
 
 ### Environment Variables
 
-- `DEER_FLOW_CONFIG_PATH` - Override config.yaml location
-- `DEER_FLOW_EXTENSIONS_CONFIG_PATH` - Override extensions_config.json location
+- `MAGIC_FLOW_CONFIG_PATH` - Override config.yaml location
+- `MAGIC_FLOW_EXTENSIONS_CONFIG_PATH` - Override extensions_config.json location
 - Model API keys: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `DEEPSEEK_API_KEY`, etc.
 - Tool API keys: `TAVILY_API_KEY`, `GITHUB_TOKEN`, etc.
 
@@ -358,3 +334,4 @@ See the [LICENSE](../LICENSE) file in the project root.
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+

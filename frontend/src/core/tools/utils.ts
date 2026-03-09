@@ -1,4 +1,4 @@
-import type { ToolCall } from "@langchain/core/messages";
+﻿import type { ToolCall } from "@langchain/core/messages";
 import type { AIMessage } from "@langchain/langgraph-sdk";
 
 import type { Translations } from "../i18n";

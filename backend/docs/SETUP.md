@@ -1,16 +1,16 @@
 # Setup Guide
 
-Quick setup instructions for DeerFlow.
+Quick setup instructions for magicflow.
 
 ## Configuration Setup
 
-DeerFlow uses a YAML configuration file that should be placed in the **project root directory**.
+magicflow uses a YAML configuration file that should be placed in the **project root directory**.
 
 ### Steps
 
 1. **Navigate to project root**:
    ```bash
-   cd /path/to/deer-flow
+   cd /path/to/magic-flow
    ```
 
 2. **Copy example configuration**:
@@ -30,12 +30,12 @@ DeerFlow uses a YAML configuration file that should be placed in the **project r
 4. **Verify configuration**:
    ```bash
    cd backend
-   python -c "from src.config import get_app_config; print('✓ Config loaded:', get_app_config().models[0].name)"
+   python -c "from src.config import get_app_config; print('�?Config loaded:', get_app_config().models[0].name)"
    ```
 
 ## Important Notes
 
-- **Location**: `config.yaml` should be in `deer-flow/` (project root), not `deer-flow/backend/`
+- **Location**: `config.yaml` should be in `magic-flow/` (project root), not `magic-flow/backend/`
 - **Git**: `config.yaml` is automatically ignored by git (contains secrets)
 - **Priority**: If both `backend/config.yaml` and `../config.yaml` exist, backend version takes precedence
 
@@ -43,11 +43,11 @@ DeerFlow uses a YAML configuration file that should be placed in the **project r
 
 The backend searches for `config.yaml` in this order:
 
-1. `DEER_FLOW_CONFIG_PATH` environment variable (if set)
+1. `MAGIC_FLOW_CONFIG_PATH` environment variable (if set)
 2. `backend/config.yaml` (current directory when running from backend/)
-3. `deer-flow/config.yaml` (parent directory - **recommended location**)
+3. `magic-flow/config.yaml` (parent directory - **recommended location**)
 
-**Recommended**: Place `config.yaml` in project root (`deer-flow/config.yaml`).
+**Recommended**: Place `config.yaml` in project root (`magic-flow/config.yaml`).
 
 ## Sandbox Setup (Optional but Recommended)
 
@@ -71,7 +71,7 @@ If you skip this step, the image will be automatically pulled on first agent exe
 
 ```bash
 # Check where the backend is looking
-cd deer-flow/backend
+cd magic-flow/backend
 python -c "from src.config.app_config import AppConfig; print(AppConfig.resolve_config_path())"
 ```
 
@@ -90,3 +90,4 @@ chmod 600 ../config.yaml  # Protect sensitive configuration
 
 - [Configuration Guide](docs/CONFIGURATION.md) - Detailed configuration options
 - [Architecture Overview](CLAUDE.md) - System architecture
+

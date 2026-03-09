@@ -12,9 +12,12 @@ export const DEFAULT_LOCAL_SETTINGS: LocalSettings = {
   layout: {
     sidebar_collapsed: false,
   },
+  agent: {
+    assistant_id: "lead_agent",
+  },
 };
 
-const LOCAL_SETTINGS_KEY = "deerflow.local-settings";
+const LOCAL_SETTINGS_KEY = "magicflow.local-settings";
 
 export interface LocalSettings {
   notification: {
@@ -30,6 +33,9 @@ export interface LocalSettings {
   layout: {
     sidebar_collapsed: boolean;
   };
+  agent: {
+    assistant_id: string;
+  };
 }
 
 export function getLocalSettings(): LocalSettings {
@@ -40,6 +46,12 @@ export function getLocalSettings(): LocalSettings {
   try {
     if (json) {
       const settings = JSON.parse(json);
+      // Migrate old lead_agent to research
+      if (settings.agent?.assistant_id === "lead_agent") {
+        settings.agent.assistant_id = "research";
+        // Save the migrated settings
+        localStorage.setItem(LOCAL_SETTINGS_KEY, JSON.stringify(settings));
+      }
       const mergedSettings = {
         ...DEFAULT_LOCAL_SETTINGS,
         context: {
@@ -54,6 +66,10 @@ export function getLocalSettings(): LocalSettings {
           ...DEFAULT_LOCAL_SETTINGS.notification,
           ...settings.notification,
         },
+        agent: {
+          ...DEFAULT_LOCAL_SETTINGS.agent,
+          ...settings.agent,
+        },
       };
       return mergedSettings;
     }
@@ -64,3 +80,4 @@ export function getLocalSettings(): LocalSettings {
 export function saveLocalSettings(settings: LocalSettings) {
   localStorage.setItem(LOCAL_SETTINGS_KEY, JSON.stringify(settings));
 }
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { PromptInputProvider } from "@/components/ai-elements/prompt-input";
 import { ArtifactsProvider } from "@/components/workspace/artifacts";

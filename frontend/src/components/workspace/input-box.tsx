@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import type { ChatStatus } from "ai";
 import {
@@ -19,6 +19,9 @@ import {
   useState,
   type ComponentProps,
 } from "react";
+
+import { getAgentName } from "@/core/config/agents";
+import { useAgentConfigs } from "@/core/config/use-agent-configs";
 
 import {
   PromptInput,
@@ -68,6 +71,8 @@ import {
 
 import { ModeHoverGuide } from "./mode-hover-guide";
 import { Tooltip } from "./tooltip";
+import { useLocalSettings } from "@/core/settings";
+import { BrainIcon } from "lucide-react";
 
 type InputMode = "flash" | "thinking" | "pro" | "ultra";
 
@@ -204,6 +209,12 @@ export function InputBox({
     [onContextChange, context],
   );
 
+  // Get current agent from settings
+  const [settings, setSettings] = useLocalSettings();
+  const agentId = settings.agent.assistant_id;
+  const { agents: AGENT_CONFIGS } = useAgentConfigs();
+  const agentName = getAgentName(agentId);
+
   const handleSubmit = useCallback(
     async (message: PromptInputMessage) => {
       if (status === "streaming") {
@@ -250,6 +261,54 @@ export function InputBox({
       </PromptInputBody>
       <PromptInputFooter className="flex">
         <PromptInputTools>
+          {/* Agent Selector */}
+          <PromptInputActionMenu>
+            <PromptInputActionMenuTrigger className="gap-1.5 px-2!">
+              <BrainIcon className="size-3" />
+              <span className="text-xs font-medium">{agentName}</span>
+            </PromptInputActionMenuTrigger>
+            <PromptInputActionMenuContent className="w-80">
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="text-muted-foreground text-xs">
+                  选择 Agent
+                </DropdownMenuLabel>
+                <PromptInputActionMenu>
+                  {AGENT_CONFIGS.map((agent) => (
+                    <PromptInputActionMenuItem
+                      key={agent.id}
+                      className={cn(
+                        agentId === agent.id
+                          ? "text-accent-foreground"
+                          : "text-muted-foreground/65",
+                      )}
+                      onSelect={() => {
+                        setSettings("agent", { assistant_id: agent.id });
+                      }}
+                    >
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-1 font-bold">
+                          <BrainIcon className="mr-2 size-4" />
+                          {agent.name}
+                        </div>
+                        <div className="pl-7 text-xs">
+                          {agent.description}
+                        </div>
+                      </div>
+                      {agentId === agent.id ? (
+                        <CheckIcon className="ml-auto size-4" />
+                      ) : (
+                        <div className="ml-auto size-4" />
+                      )}
+                    </PromptInputActionMenuItem>
+                  ))}
+                </PromptInputActionMenu>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <div className="px-4 py-2 text-xs text-muted-foreground">
+                切换 Agent 后，新对话将使用选中的 Agent。现有对话不受影响。
+              </div>
+            </PromptInputActionMenuContent>
+          </PromptInputActionMenu>
           {/* TODO: Add more connectors here
           <PromptInputActionMenu>
             <PromptInputActionMenuTrigger className="px-2!" />

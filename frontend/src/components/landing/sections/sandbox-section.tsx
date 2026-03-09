@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import {
   AnimatedSpan,
@@ -15,8 +15,8 @@ export function SandboxSection({ className }: { className?: string }) {
       title="Agent Runtime Environment"
       subtitle={
         <p>
-          We give DeerFlow a &quot;computer&quot;, which can execute commands,
-          manage files, and run long tasks — all in a secure Docker-based
+          We give magicflow a &quot;computer&quot;, which can execute commands,
+          manage files, and run long tasks - all in a secure Docker-based
           sandbox
         </p>
       }
@@ -35,27 +35,27 @@ export function SandboxSection({ className }: { className?: string }) {
               $ pip install -r requirements.txt
             </TypingAnimation>
             <AnimatedSpan delay={2000} className="text-green-500">
-              ✔ Installed pygame
+              ✓ Installed pygame
             </AnimatedSpan>
 
             <TypingAnimation delay={2400}>
               $ write game.py --lines 156
             </TypingAnimation>
             <AnimatedSpan delay={3200} className="text-blue-500">
-              ✔ Written 156 lines
+              ✓ Written 156 lines
             </AnimatedSpan>
 
             <TypingAnimation delay={3600}>
               $ python game.py --test
             </TypingAnimation>
             <AnimatedSpan delay={4200} className="text-green-500">
-              ✔ All sprites loaded
+              ✓ All sprites loaded
             </AnimatedSpan>
             <AnimatedSpan delay={4500} className="text-green-500">
-              ✔ Physics engine OK
+              ✓ Physics engine OK
             </AnimatedSpan>
             <AnimatedSpan delay={4800} className="text-green-500">
-              ✔ 60 FPS stable
+              ✓ 60 FPS stable
             </AnimatedSpan>
 
             {/* Scene 2: Data Analysis */}
@@ -124,3 +124,4 @@ export function SandboxSection({ className }: { className?: string }) {
     </Section>
   );
 }
+

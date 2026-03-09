@@ -73,13 +73,16 @@ class ThreadDataMiddleware(AgentMiddleware[ThreadDataMiddlewareState]):
     def before_agent(self, state: ThreadDataMiddlewareState, runtime: Runtime) -> dict | None:
         thread_id = runtime.context.get("thread_id")
         if thread_id is None:
-            raise ValueError("Thread ID is required in the context")
+            thread_id = runtime.config.get("configurable", {}).get("thread_id")
+        
+        if thread_id is None:
+            import uuid
+            thread_id = str(uuid.uuid4())
+            print(f"Warning: No thread_id provided, generated temporary ID: {thread_id}")
 
         if self._lazy_init:
-            # Lazy initialization: only compute paths, don't create directories
             paths = self._get_thread_paths(thread_id)
         else:
-            # Eager initialization: create directories immediately
             paths = self._create_thread_directories(thread_id)
             print(f"Created thread data directories for thread {thread_id}")
 

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Cookie utilities for locale management
  * Works on both client and server side
  */

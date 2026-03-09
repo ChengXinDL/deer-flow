@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# cleanup-containers.sh - Clean up DeerFlow sandbox containers
+# cleanup-containers.sh - Clean up magicflow sandbox containers
 #
 # This script cleans up both Docker and Apple Container runtime containers
 # to ensure compatibility across different container runtimes.
@@ -8,7 +8,7 @@
 
 set -e
 
-PREFIX="${1:-deer-flow-sandbox}"
+PREFIX="${1:-magic-flow-sandbox}"
 
 # Colors for output
 RED='\033[0;31m'
@@ -30,7 +30,7 @@ cleanup_docker() {
             docker ps --filter "name=${PREFIX}" --format "table {{.ID}}\t{{.Names}}\t{{.Status}}"
             echo "Stopping Docker containers..."
             echo "$DOCKER_CONTAINERS" | xargs docker stop 2>/dev/null || true
-            echo -e "${GREEN}✓ Docker containers stopped${NC}"
+            echo -e "${GREEN}�?Docker containers stopped${NC}"
         else
             echo -e "${GREEN}none found${NC}"
         fi
@@ -76,7 +76,7 @@ except:
                 echo "$CONTAINER_IDS" | while read -r cid; do
                     container stop "$cid" 2>/dev/null || true
                 done
-                echo -e "${GREEN}✓ Apple Container containers stopped${NC}"
+                echo -e "${GREEN}�?Apple Container containers stopped${NC}"
             else
                 echo -e "${GREEN}none found${NC}"
             fi
@@ -92,4 +92,5 @@ except:
 cleanup_docker
 cleanup_apple_container
 
-echo -e "${GREEN}✓ Container cleanup complete${NC}"
+echo -e "${GREEN}�?Container cleanup complete${NC}"
+

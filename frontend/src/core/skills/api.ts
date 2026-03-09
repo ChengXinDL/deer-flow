@@ -1,4 +1,4 @@
-import { getBackendBaseURL } from "@/core/config";
+﻿import { getBackendBaseURL } from "@/core/config";
 
 import type { Skill } from "./type";
 

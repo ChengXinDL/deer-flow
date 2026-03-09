@@ -1,6 +1,6 @@
-# Contributing to DeerFlow Backend
+# Contributing to magicflow Backend
 
-Thank you for your interest in contributing to DeerFlow! This document provides guidelines and instructions for contributing to the backend codebase.
+Thank you for your interest in contributing to magicflow! This document provides guidelines and instructions for contributing to the backend codebase.
 
 ## Table of Contents
 
@@ -27,8 +27,8 @@ Thank you for your interest in contributing to DeerFlow! This document provides 
 1. Fork the repository on GitHub
 2. Clone your fork locally:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/deer-flow.git
-   cd deer-flow
+   git clone https://github.com/YOUR_USERNAME/magic-flow.git
+   cd magic-flow
    ```
 
 ## Development Setup
@@ -68,61 +68,51 @@ make gateway
 ```
 backend/src/
 ├── agents/                  # Agent system
-│   ├── lead_agent/         # Main agent implementation
-│   │   └── agent.py        # Agent factory and creation
-│   ├── middlewares/        # Agent middlewares
-│   │   ├── thread_data_middleware.py
-│   │   ├── sandbox_middleware.py
-│   │   ├── title_middleware.py
-│   │   ├── uploads_middleware.py
-│   │   ├── view_image_middleware.py
-│   │   └── clarification_middleware.py
-│   └── thread_state.py     # Thread state definition
-│
-├── gateway/                 # FastAPI Gateway
-│   ├── app.py              # FastAPI application
-│   └── routers/            # Route handlers
-│       ├── models.py       # /api/models endpoints
-│       ├── mcp.py          # /api/mcp endpoints
-│       ├── skills.py       # /api/skills endpoints
-│       ├── artifacts.py    # /api/threads/.../artifacts
-│       └── uploads.py      # /api/threads/.../uploads
-│
-├── sandbox/                 # Sandbox execution
-│   ├── __init__.py         # Sandbox interface
-│   ├── local.py            # Local sandbox provider
-│   └── tools.py            # Sandbox tools (bash, file ops)
-│
-├── tools/                   # Agent tools
-│   └── builtins/           # Built-in tools
-│       ├── present_file_tool.py
-│       ├── ask_clarification_tool.py
-│       └── view_image_tool.py
-│
-├── mcp/                     # MCP integration
-│   └── manager.py          # MCP server management
-│
-├── models/                  # Model system
-│   └── factory.py          # Model factory
-│
-├── skills/                  # Skills system
-│   └── loader.py           # Skills loader
-│
-├── config/                  # Configuration
-│   ├── app_config.py       # Main app config
-│   ├── extensions_config.py # Extensions config
-│   └── summarization_config.py
-│
-├── community/               # Community tools
-│   ├── tavily/             # Tavily web search
-│   ├── jina/               # Jina web fetch
-│   ├── firecrawl/          # Firecrawl scraping
-│   └── aio_sandbox/        # Docker sandbox
-│
-├── reflection/              # Dynamic loading
-│   └── __init__.py         # Module resolution
-│
-└── utils/                   # Utilities
+�?  ├── lead_agent/         # Main agent implementation
+�?  �?  └── agent.py        # Agent factory and creation
+�?  ├── middlewares/        # Agent middlewares
+�?  �?  ├── thread_data_middleware.py
+�?  �?  ├── sandbox_middleware.py
+�?  �?  ├── title_middleware.py
+�?  �?  ├── uploads_middleware.py
+�?  �?  ├── view_image_middleware.py
+�?  �?  └── clarification_middleware.py
+�?  └── thread_state.py     # Thread state definition
+�?├── gateway/                 # FastAPI Gateway
+�?  ├── app.py              # FastAPI application
+�?  └── routers/            # Route handlers
+�?      ├── models.py       # /api/models endpoints
+�?      ├── mcp.py          # /api/mcp endpoints
+�?      ├── skills.py       # /api/skills endpoints
+�?      ├── artifacts.py    # /api/threads/.../artifacts
+�?      └── uploads.py      # /api/threads/.../uploads
+�?├── sandbox/                 # Sandbox execution
+�?  ├── __init__.py         # Sandbox interface
+�?  ├── local.py            # Local sandbox provider
+�?  └── tools.py            # Sandbox tools (bash, file ops)
+�?├── tools/                   # Agent tools
+�?  └── builtins/           # Built-in tools
+�?      ├── present_file_tool.py
+�?      ├── ask_clarification_tool.py
+�?      └── view_image_tool.py
+�?├── mcp/                     # MCP integration
+�?  └── manager.py          # MCP server management
+�?├── models/                  # Model system
+�?  └── factory.py          # Model factory
+�?├── skills/                  # Skills system
+�?  └── loader.py           # Skills loader
+�?├── config/                  # Configuration
+�?  ├── app_config.py       # Main app config
+�?  ├── extensions_config.py # Extensions config
+�?  └── summarization_config.py
+�?├── community/               # Community tools
+�?  ├── tavily/             # Tavily web search
+�?  ├── jina/               # Jina web fetch
+�?  ├── firecrawl/          # Firecrawl scraping
+�?  └── aio_sandbox/        # Docker sandbox
+�?├── reflection/              # Dynamic loading
+�?  └── __init__.py         # Module resolution
+�?└── utils/                   # Utilities
     └── __init__.py
 ```
 
@@ -216,9 +206,9 @@ Place tests in the `tests/` directory mirroring the source structure:
 ```
 tests/
 ├── test_models/
-│   └── test_factory.py
+�?  └── test_factory.py
 ├── test_sandbox/
-│   └── test_local.py
+�?  └── test_local.py
 └── test_gateway/
     └── test_models_router.py
 ```
@@ -423,4 +413,5 @@ If you have questions about contributing:
 2. Look for similar issues or PRs on GitHub
 3. Open a discussion or issue on GitHub
 
-Thank you for contributing to DeerFlow!
+Thank you for contributing to magicflow!
+

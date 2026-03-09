@@ -1,4 +1,4 @@
-"""Tests for DeerFlowClient."""
+"""Tests for magicflowClient."""
 
 import json
 import tempfile
@@ -9,7 +9,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage  # noqa: F401
 
-from src.client import DeerFlowClient
+from src.client import magicflowClient
 from src.gateway.routers.mcp import McpConfigResponse
 from src.gateway.routers.memory import MemoryConfigResponse, MemoryStatusResponse
 from src.gateway.routers.models import ModelResponse, ModelsListResponse
@@ -36,9 +36,9 @@ def mock_app_config():
 
 @pytest.fixture
 def client(mock_app_config):
-    """Create a DeerFlowClient with mocked config loading."""
+    """Create a magicflowClient with mocked config loading."""
     with patch("src.client.get_app_config", return_value=mock_app_config):
-        return DeerFlowClient()
+        return magicflowClient()
 
 
 # ---------------------------------------------------------------------------
@@ -56,7 +56,7 @@ class TestClientInit:
 
     def test_custom_params(self, mock_app_config):
         with patch("src.client.get_app_config", return_value=mock_app_config):
-            c = DeerFlowClient(
+            c = magicflowClient(
                 model_name="gpt-4",
                 thinking_enabled=False,
                 subagent_enabled=True,
@@ -72,13 +72,13 @@ class TestClientInit:
             patch("src.client.reload_app_config") as mock_reload,
             patch("src.client.get_app_config", return_value=mock_app_config),
         ):
-            DeerFlowClient(config_path="/tmp/custom.yaml")
+            magicflowClient(config_path="/tmp/custom.yaml")
             mock_reload.assert_called_once_with("/tmp/custom.yaml")
 
     def test_checkpointer_stored(self, mock_app_config):
         cp = MagicMock()
         with patch("src.client.get_app_config", return_value=mock_app_config):
-            c = DeerFlowClient(checkpointer=cp)
+            c = magicflowClient(checkpointer=cp)
         assert c._checkpointer is cp
 
 
@@ -316,7 +316,7 @@ class TestChat:
 
 class TestExtractText:
     def test_string(self):
-        assert DeerFlowClient._extract_text("hello") == "hello"
+        assert magicflowClient._extract_text("hello") == "hello"
 
     def test_list_text_blocks(self):
         content = [
@@ -324,16 +324,16 @@ class TestExtractText:
             {"type": "thinking", "thinking": "skip"},
             {"type": "text", "text": "second"},
         ]
-        assert DeerFlowClient._extract_text(content) == "first\nsecond"
+        assert magicflowClient._extract_text(content) == "first\nsecond"
 
     def test_list_plain_strings(self):
-        assert DeerFlowClient._extract_text(["a", "b"]) == "a\nb"
+        assert magicflowClient._extract_text(["a", "b"]) == "a\nb"
 
     def test_empty_list(self):
-        assert DeerFlowClient._extract_text([]) == ""
+        assert magicflowClient._extract_text([]) == ""
 
     def test_other_type(self):
-        assert DeerFlowClient._extract_text(42) == "42"
+        assert magicflowClient._extract_text(42) == "42"
 
 
 # ---------------------------------------------------------------------------
@@ -366,7 +366,7 @@ class TestEnsureAgent:
         config = client._get_runnable_config("t1")
         client._ensure_agent(config)
 
-        # Should still be the same mock — no recreation
+        # Should still be the same mock �?no recreation
         assert client._agent is mock_agent
 
 
@@ -566,7 +566,7 @@ class TestMemoryManagement:
     def test_get_memory_config(self, client):
         config = MagicMock()
         config.enabled = True
-        config.storage_path = ".deer-flow/memory.json"
+        config.storage_path = ".magic-flow/memory.json"
         config.debounce_seconds = 30
         config.max_facts = 100
         config.fact_confidence_threshold = 0.7
@@ -582,7 +582,7 @@ class TestMemoryManagement:
     def test_get_memory_status(self, client):
         config = MagicMock()
         config.enabled = True
-        config.storage_path = ".deer-flow/memory.json"
+        config.storage_path = ".magic-flow/memory.json"
         config.debounce_seconds = 30
         config.max_facts = 100
         config.fact_confidence_threshold = 0.7
@@ -617,7 +617,7 @@ class TestUploads:
             uploads_dir = tmp_path / "uploads"
             uploads_dir.mkdir()
 
-            with patch.object(DeerFlowClient, "_get_uploads_dir", return_value=uploads_dir):
+            with patch.object(magicflowClient, "_get_uploads_dir", return_value=uploads_dir):
                 result = client.upload_files("thread-1", [src_file])
 
             assert result["success"] is True
@@ -637,7 +637,7 @@ class TestUploads:
             (uploads_dir / "a.txt").write_text("a")
             (uploads_dir / "b.txt").write_text("bb")
 
-            with patch.object(DeerFlowClient, "_get_uploads_dir", return_value=uploads_dir):
+            with patch.object(magicflowClient, "_get_uploads_dir", return_value=uploads_dir):
                 result = client.list_uploads("thread-1")
 
             assert result["count"] == 2
@@ -653,7 +653,7 @@ class TestUploads:
             uploads_dir = Path(tmp)
             (uploads_dir / "delete-me.txt").write_text("gone")
 
-            with patch.object(DeerFlowClient, "_get_uploads_dir", return_value=uploads_dir):
+            with patch.object(magicflowClient, "_get_uploads_dir", return_value=uploads_dir):
                 result = client.delete_upload("thread-1", "delete-me.txt")
 
             assert result["success"] is True
@@ -662,14 +662,14 @@ class TestUploads:
 
     def test_delete_upload_not_found(self, client):
         with tempfile.TemporaryDirectory() as tmp:
-            with patch.object(DeerFlowClient, "_get_uploads_dir", return_value=Path(tmp)):
+            with patch.object(magicflowClient, "_get_uploads_dir", return_value=Path(tmp)):
                 with pytest.raises(FileNotFoundError):
                     client.delete_upload("thread-1", "nope.txt")
 
     def test_delete_upload_path_traversal(self, client):
         with tempfile.TemporaryDirectory() as tmp:
             uploads_dir = Path(tmp)
-            with patch.object(DeerFlowClient, "_get_uploads_dir", return_value=uploads_dir):
+            with patch.object(magicflowClient, "_get_uploads_dir", return_value=uploads_dir):
                 with pytest.raises(PermissionError):
                     client.delete_upload("thread-1", "../../etc/passwd")
 
@@ -808,7 +808,7 @@ class TestScenarioToolChain:
     """Scenario: Agent chains multiple tool calls in sequence."""
 
     def test_multi_tool_chain(self, client):
-        """Agent calls bash → reads output → calls write_file → responds."""
+        """Agent calls bash �?reads output �?calls write_file �?responds."""
         ai_bash = AIMessage(content="", id="ai-1", tool_calls=[
             {"name": "bash", "args": {"cmd": "ls /mnt/user-data/workspace"}, "id": "tc-1"},
         ])
@@ -847,10 +847,10 @@ class TestScenarioToolChain:
 
 
 class TestScenarioFileLifecycle:
-    """Scenario: Upload files → list them → use in chat → download artifact."""
+    """Scenario: Upload files �?list them �?use in chat �?download artifact."""
 
     def test_upload_list_delete_lifecycle(self, client):
-        """Upload → list → verify → delete → list again."""
+        """Upload �?list �?verify �?delete �?list again."""
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)
             uploads_dir = tmp_path / "uploads"
@@ -860,7 +860,7 @@ class TestScenarioFileLifecycle:
             (tmp_path / "report.txt").write_text("quarterly report data")
             (tmp_path / "data.csv").write_text("a,b,c\n1,2,3")
 
-            with patch.object(DeerFlowClient, "_get_uploads_dir", return_value=uploads_dir):
+            with patch.object(magicflowClient, "_get_uploads_dir", return_value=uploads_dir):
                 # Step 1: Upload
                 result = client.upload_files("t-lifecycle", [
                     tmp_path / "report.txt",
@@ -898,7 +898,7 @@ class TestScenarioFileLifecycle:
             src_file = tmp_path / "input.txt"
             src_file.write_text("raw data to process")
 
-            with patch.object(DeerFlowClient, "_get_uploads_dir", return_value=uploads_dir):
+            with patch.object(magicflowClient, "_get_uploads_dir", return_value=uploads_dir):
                 uploaded = client.upload_files("t-artifact", [src_file])
                 assert len(uploaded["files"]) == 1
 
@@ -920,7 +920,7 @@ class TestScenarioConfigManagement:
     """Scenario: Query and update configuration through a management session."""
 
     def test_model_and_skill_discovery(self, client):
-        """List models → get specific model → list skills → get specific skill."""
+        """List models �?get specific model �?list skills �?get specific skill."""
         # List models
         result = client.list_models()
         assert len(result["models"]) >= 1
@@ -956,7 +956,7 @@ class TestScenarioConfigManagement:
         assert detail["enabled"] is True
 
     def test_mcp_update_then_skill_toggle(self, client):
-        """Update MCP config → toggle skill → verify both invalidate agent."""
+        """Update MCP config �?toggle skill �?verify both invalidate agent."""
         with tempfile.TemporaryDirectory() as tmp:
             config_file = Path(tmp) / "extensions_config.json"
             config_file.write_text("{}")
@@ -1129,7 +1129,7 @@ class TestScenarioThreadIsolation:
             def get_dir(thread_id):
                 return uploads_a if thread_id == "thread-a" else uploads_b
 
-            with patch.object(DeerFlowClient, "_get_uploads_dir", side_effect=get_dir):
+            with patch.object(magicflowClient, "_get_uploads_dir", side_effect=get_dir):
                 client.upload_files("thread-a", [src_file])
 
                 files_a = client.list_uploads("thread-a")
@@ -1161,10 +1161,10 @@ class TestScenarioThreadIsolation:
 
 
 class TestScenarioMemoryWorkflow:
-    """Scenario: Memory query → reload → status check."""
+    """Scenario: Memory query �?reload �?status check."""
 
     def test_memory_full_lifecycle(self, client):
-        """get_memory → reload → get_status covers the full memory API."""
+        """get_memory �?reload �?get_status covers the full memory API."""
         initial_data = {"version": "1.0", "facts": [{"id": "f1", "content": "User likes Python"}]}
         updated_data = {"version": "1.0", "facts": [
             {"id": "f1", "content": "User likes Python"},
@@ -1173,7 +1173,7 @@ class TestScenarioMemoryWorkflow:
 
         config = MagicMock()
         config.enabled = True
-        config.storage_path = ".deer-flow/memory.json"
+        config.storage_path = ".magic-flow/memory.json"
         config.debounce_seconds = 30
         config.max_facts = 100
         config.fact_confidence_threshold = 0.7
@@ -1198,10 +1198,10 @@ class TestScenarioMemoryWorkflow:
 
 
 class TestScenarioSkillInstallAndUse:
-    """Scenario: Install a skill → verify it appears → toggle it."""
+    """Scenario: Install a skill �?verify it appears �?toggle it."""
 
     def test_install_then_toggle(self, client):
-        """Install .skill archive → list to verify → disable → verify disabled."""
+        """Install .skill archive �?list to verify �?disable �?verify disabled."""
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)
 
@@ -1268,7 +1268,7 @@ class TestScenarioEdgeCases:
     """Scenario: Edge cases and error boundaries in realistic workflows."""
 
     def test_empty_stream_response(self, client):
-        """Agent produces no messages — only values + end events."""
+        """Agent produces no messages �?only values + end events."""
         agent = _make_agent_mock([{"messages": []}])
 
         with (
@@ -1318,7 +1318,7 @@ class TestScenarioEdgeCases:
         assert values_events[2].data["title"] == "Second Title"
 
     def test_concurrent_tool_calls_in_single_message(self, client):
-        """Agent produces multiple tool_calls in one AIMessage — emitted as single messages-tuple."""
+        """Agent produces multiple tool_calls in one AIMessage �?emitted as single messages-tuple."""
         ai = AIMessage(content="", id="ai-1", tool_calls=[
             {"name": "web_search", "args": {"q": "a"}, "id": "tc-1"},
             {"name": "web_search", "args": {"q": "b"}, "id": "tc-2"},
@@ -1340,7 +1340,7 @@ class TestScenarioEdgeCases:
         assert {tc["id"] for tc in tool_calls} == {"tc-1", "tc-2", "tc-3"}
 
     def test_upload_convertible_file_conversion_failure(self, client):
-        """Upload a .pdf file where conversion fails — file still uploaded, no markdown."""
+        """Upload a .pdf file where conversion fails �?file still uploaded, no markdown."""
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)
             uploads_dir = tmp_path / "uploads"
@@ -1350,7 +1350,7 @@ class TestScenarioEdgeCases:
             pdf_file.write_bytes(b"%PDF-1.4 fake content")
 
             with (
-                patch.object(DeerFlowClient, "_get_uploads_dir", return_value=uploads_dir),
+                patch.object(magicflowClient, "_get_uploads_dir", return_value=uploads_dir),
                 patch("src.gateway.routers.uploads.CONVERTIBLE_EXTENSIONS", {".pdf"}),
                 patch("src.gateway.routers.uploads.convert_file_to_markdown", side_effect=Exception("conversion failed")),
             ):
@@ -1364,11 +1364,11 @@ class TestScenarioEdgeCases:
 
 
 # ---------------------------------------------------------------------------
-# Gateway conformance — validate client output against Gateway Pydantic models
+# Gateway conformance �?validate client output against Gateway Pydantic models
 # ---------------------------------------------------------------------------
 
 class TestGatewayConformance:
-    """Validate that DeerFlowClient return dicts conform to Gateway Pydantic response models.
+    """Validate that magicflowClient return dicts conform to Gateway Pydantic response models.
 
     Each test calls a client method, then parses the result through the
     corresponding Gateway response model. If the client drifts (missing or
@@ -1384,7 +1384,7 @@ class TestGatewayConformance:
         mock_app_config.models = [model]
 
         with patch("src.client.get_app_config", return_value=mock_app_config):
-            client = DeerFlowClient()
+            client = magicflowClient()
 
         result = client.list_models()
         parsed = ModelsListResponse(**result)
@@ -1401,7 +1401,7 @@ class TestGatewayConformance:
         mock_app_config.get_model_config.return_value = model
 
         with patch("src.client.get_app_config", return_value=mock_app_config):
-            client = DeerFlowClient()
+            client = magicflowClient()
 
         result = client.get_model("test-model")
         assert result is not None
@@ -1515,7 +1515,7 @@ class TestGatewayConformance:
         src_file = tmp_path / "hello.txt"
         src_file.write_text("hello")
 
-        with patch.object(DeerFlowClient, "_get_uploads_dir", return_value=uploads_dir):
+        with patch.object(magicflowClient, "_get_uploads_dir", return_value=uploads_dir):
             result = client.upload_files("t-conform", [src_file])
 
         parsed = UploadResponse(**result)
@@ -1525,7 +1525,7 @@ class TestGatewayConformance:
     def test_get_memory_config(self, client):
         mem_cfg = MagicMock()
         mem_cfg.enabled = True
-        mem_cfg.storage_path = ".deer-flow/memory.json"
+        mem_cfg.storage_path = ".magic-flow/memory.json"
         mem_cfg.debounce_seconds = 30
         mem_cfg.max_facts = 100
         mem_cfg.fact_confidence_threshold = 0.7
@@ -1542,7 +1542,7 @@ class TestGatewayConformance:
     def test_get_memory_status(self, client):
         mem_cfg = MagicMock()
         mem_cfg.enabled = True
-        mem_cfg.storage_path = ".deer-flow/memory.json"
+        mem_cfg.storage_path = ".magic-flow/memory.json"
         mem_cfg.debounce_seconds = 30
         mem_cfg.max_facts = 100
         mem_cfg.fact_confidence_threshold = 0.7
@@ -1574,3 +1574,4 @@ class TestGatewayConformance:
         parsed = MemoryStatusResponse(**result)
         assert parsed.config.enabled is True
         assert parsed.data.version == "1.0"
+

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * React hooks for file uploads
  */
 

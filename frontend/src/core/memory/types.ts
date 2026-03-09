@@ -1,4 +1,4 @@
-export interface UserMemory {
+﻿export interface UserMemory {
   version: string;
   lastUpdated: string;
   user: {

@@ -15,7 +15,6 @@ to the end of the message list as before_model + add_messages reducer would do.
 
 import logging
 from collections.abc import Awaitable, Callable
-from typing import override
 
 from langchain.agents import AgentState
 from langchain.agents.middleware import AgentMiddleware
@@ -87,7 +86,6 @@ class DanglingToolCallMiddleware(AgentMiddleware[AgentState]):
         logger.warning(f"Injecting {patch_count} placeholder ToolMessage(s) for dangling tool calls")
         return patched
 
-    @override
     def wrap_model_call(
         self,
         request: ModelRequest,
@@ -98,7 +96,6 @@ class DanglingToolCallMiddleware(AgentMiddleware[AgentState]):
             request = request.override(messages=patched)
         return handler(request)
 
-    @override
     async def awrap_model_call(
         self,
         request: ModelRequest,

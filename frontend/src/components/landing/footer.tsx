@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+﻿import { useMemo } from "react";
 
 export function Footer() {
   const year = useMemo(() => new Date().getFullYear(), []);
@@ -12,8 +12,9 @@ export function Footer() {
       </div>
       <div className="text-muted-foreground container mb-8 flex flex-col items-center justify-center text-xs">
         <p>Licensed under MIT License</p>
-        <p>&copy; {year} DeerFlow</p>
+        <p>&copy; {year} magicflow</p>
       </div>
     </footer>
   );
 }
+

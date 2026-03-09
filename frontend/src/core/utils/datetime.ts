@@ -1,4 +1,4 @@
-import { formatDistanceToNow } from "date-fns";
+﻿import { formatDistanceToNow } from "date-fns";
 import { enUS as dateFnsEnUS, zhCN as dateFnsZhCN } from "date-fns/locale";
 
 import { detectLocale, type Locale } from "@/core/i18n";

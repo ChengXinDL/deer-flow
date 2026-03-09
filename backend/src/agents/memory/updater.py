@@ -112,7 +112,7 @@ def _load_memory_from_file() -> dict[str, Any]:
         with open(file_path, encoding="utf-8") as f:
             data = json.load(f)
         return data
-    except (json.JSONDecodeError, OSError) as e:
+    except (json.JSONDecoMAGICror, OSError) as e:
         print(f"Failed to load memory file: {e}")
         return _create_empty_memory()
 
@@ -227,7 +227,7 @@ class MemoryUpdater:
             # Save
             return _save_memory_to_file(updated_memory)
 
-        except json.JSONDecodeError as e:
+        except json.JSONDecoMAGICror as e:
             print(f"Failed to parse LLM response for memory update: {e}")
             return False
         except Exception as e:

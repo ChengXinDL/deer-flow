@@ -1,21 +1,20 @@
-# DeerFlow 后端故障排除指南
+# magicflow 后端故障排除指南
 
 ## 环境配置问题
 
-### 1. Python 版本不兼容
-
+### 1. Python 版本不兼�?
 **问题**: `requires-python: >=3.12`
 
 **解决方案**:
 ```bash
-# 检查 Python 版本
-python --version  # 需要 3.12+
+# 检�?Python 版本
+python --version  # 需�?3.12+
 
 # 使用 pyenv 安装 Python 3.12
 pyenv install 3.12.0
 pyenv local 3.12.0
 
-# 或使用 uv 管理 Python
+# 或使�?uv 管理 Python
 uv python install 3.12
 uv python use 3.12
 ```
@@ -51,18 +50,17 @@ rm -rf .venv
 # 重新安装
 make install
 
-# 或使用 uv 直接安装
+# 或使�?uv 直接安装
 uv sync
 ```
 
-### 4. 配置文件未找到
-
+### 4. 配置文件未找�?
 **问题**: `Config file not found`
 
 **解决方案**:
 ```bash
 # 1. 确保在项目根目录
-cd deer-flow
+cd magic-flow
 
 # 2. 复制配置模板
 cp config.example.yaml config.yaml
@@ -70,47 +68,39 @@ cp config.example.yaml config.yaml
 # 3. 验证配置位置
 ls -la config.yaml
 
-# 4. 检查配置加载
-python -c "from src.config import get_app_config; print(get_app_config())"
+# 4. 检查配置加�?python -c "from src.config import get_app_config; print(get_app_config())"
 ```
 
-### 5. 环境变量未解析
-
-**问题**: API key 未生效
-
+### 5. 环境变量未解�?
+**问题**: API key 未生�?
 **解决方案**:
 ```bash
-# 检查环境变量
-env | grep OPENAI
+# 检查环境变�?env | grep OPENAI
 
-# 确保变量已导出
-export OPENAI_API_KEY="sk-..."
+# 确保变量已导�?export OPENAI_API_KEY="sk-..."
 
 # 验证配置中的变量替换
 python -c "
 import os
 from src.config import get_app_config
 config = get_app_config()
-print(config.models[0].api_key)  # 应该显示实际 key，不是 $OPENAI_API_KEY
+print(config.models[0].api_key)  # 应该显示实际 key，不�?$OPENAI_API_KEY
 "
 ```
 
 ## 启动问题
 
-### 1. LangGraph 服务器启动失败
-
+### 1. LangGraph 服务器启动失�?
 **问题**: `make dev` 报错
 
 **排查步骤**:
 ```bash
-# 检查端口占用
-lsof -i :2024  # macOS/Linux
+# 检查端口占�?lsof -i :2024  # macOS/Linux
 netstat -ano | findstr :2024  # Windows
 
-# 检查配置文件
-python -c "from src.config import get_app_config; print('Config OK')"
+# 检查配置文�?python -c "from src.config import get_app_config; print('Config OK')"
 
-# 检查 langgraph.json
+# 检�?langgraph.json
 cat langgraph.json
 
 # 手动启动查看详细错误
@@ -119,7 +109,7 @@ uv run langgraph dev --no-browser
 
 **常见错误**:
 - `ModuleNotFoundError`: 依赖未安装，运行 `make install`
-- `ImportError`: 检查 Python 路径
+- `ImportError`: 检�?Python 路径
 - `Address already in use`: 端口被占用，关闭其他实例
 
 ### 2. Gateway API 启动失败
@@ -128,8 +118,7 @@ uv run langgraph dev --no-browser
 
 **排查步骤**:
 ```bash
-# 检查端口占用
-lsof -i :8001
+# 检查端口占�?lsof -i :8001
 
 # 手动启动
 uv run uvicorn src.gateway.app:app --host 0.0.0.0 --port 8001 --reload
@@ -150,20 +139,17 @@ kill -9 <PID>
 netstat -ano | findstr :2024
 taskkill /PID <PID> /F
 
-# 或使用不同端口
-# 修改 Makefile 或手动指定
-uv run langgraph dev --port 2025
+# 或使用不同端�?# 修改 Makefile 或手动指�?uv run langgraph dev --port 2025
 ```
 
-## 运行时问题
-
+## 运行时问�?
 ### 1. Agent 执行失败
 
 **问题**: Agent 不响应或报错
 
 **排查步骤**:
 
-1. **检查模型配置**:
+1. **检查模型配�?*:
 ```bash
 python -c "
 from src.config import get_app_config
@@ -173,7 +159,7 @@ print('First model:', config.models[0])
 "
 ```
 
-2. **检查 API Key**:
+2. **检�?API Key**:
 ```bash
 # 测试 API 连接
 python -c "
@@ -186,7 +172,7 @@ print(response)
 "
 ```
 
-3. **检查日志**:
+3. **检查日�?*:
 ```bash
 # 查看详细日志
 export LOG_LEVEL=DEBUG
@@ -195,25 +181,22 @@ make dev
 
 ### 2. 沙箱执行失败
 
-**问题**: `bash` 或文件操作报错
-
+**问题**: `bash` 或文件操作报�?
 **排查步骤**:
 
-1. **检查沙箱配置**:
+1. **检查沙箱配�?*:
 ```yaml
 # config.yaml
 sandbox:
-  use: src.sandbox.local:LocalSandboxProvider  # 开发环境
-  # use: src.community.aio_sandbox:AioSandboxProvider  # Docker
+  use: src.sandbox.local:LocalSandboxProvider  # 开发环�?  # use: src.community.aio_sandbox:AioSandboxProvider  # Docker
 ```
 
-2. **检查目录权限**:
+2. **检查目录权�?*:
 ```bash
-# 检查线程目录
-ls -la backend/.deer-flow/threads/
+# 检查线程目�?ls -la backend/magic-floww/threads/
 
 # 修复权限
-chmod -R 755 backend/.deer-flow/
+chmod -R 755 backend/.magic-flow/
 ```
 
 3. **测试沙箱**:
@@ -229,22 +212,20 @@ print(result)
 
 ### 3. MCP 连接失败
 
-**问题**: MCP 工具不可用
-
+**问题**: MCP 工具不可�?
 **排查步骤**:
 
-1. **检查 MCP 配置**:
+1. **检�?MCP 配置**:
 ```bash
 cat extensions_config.json
 ```
 
-2. **测试 MCP 服务器**:
+2. **测试 MCP 服务�?*:
 ```bash
-# 手动测试 stdio 类型的 MCP
+# 手动测试 stdio 类型�?MCP
 npx -y @modelcontextprotocol/server-github
 
-# 检查环境变量
-echo $GITHUB_TOKEN
+# 检查环境变�?echo $GITHUB_TOKEN
 ```
 
 3. **查看 MCP 日志**:
@@ -254,13 +235,12 @@ export MCP_DEBUG=1
 make dev
 ```
 
-### 4. 记忆系统不工作
-
+### 4. 记忆系统不工�?
 **问题**: 记忆未注入或更新
 
 **排查步骤**:
 
-1. **检查记忆配置**:
+1. **检查记忆配�?*:
 ```yaml
 # config.yaml
 memory:
@@ -268,13 +248,13 @@ memory:
   max_tokens: 2000
 ```
 
-2. **检查记忆文件**:
+2. **检查记忆文�?*:
 ```bash
 # 查看记忆存储位置
-ls -la backend/.deer-flow/memory/
+ls -la backend/.magic-flow/memory/
 
 # 查看记忆内容
-cat backend/.deer-flow/memory/{user_id}.json
+cat backend/.magic-flow/memory/{user_id}.json
 ```
 
 3. **测试记忆提取**:
@@ -286,13 +266,13 @@ print(memory)
 "
 ```
 
-### 5. 子 Agent 执行失败
+### 5. �?Agent 执行失败
 
 **问题**: `task()` 工具报错
 
 **排查步骤**:
 
-1. **检查并发限制**:
+1. **检查并发限�?*:
 ```yaml
 # config.yaml
 subagents:
@@ -302,11 +282,11 @@ subagents:
 
 2. **检查子 Agent 日志**:
 ```bash
-# 查看子 Agent 执行日志
-tail -f backend/.deer-flow/logs/subagents.log
+# 查看�?Agent 执行日志
+tail -f backend/.magic-flow/logs/subagents.log
 ```
 
-3. **测试子 Agent**:
+3. **测试�?Agent**:
 ```python
 python -c "
 from src.subagents.executor import SubagentExecutor
@@ -320,21 +300,19 @@ print(result)
 
 ### 1. API 返回 404
 
-**问题**: 端点不存在
-
+**问题**: 端点不存�?
 **排查步骤**:
 
-1. **检查路由配置**:
+1. **检查路由配�?*:
 ```python
-# 查看注册的路由
-python -c "
+# 查看注册的路�?python -c "
 from src.gateway.app import app
 for route in app.routes:
     print(route.path)
 "
 ```
 
-2. **检查 URL 路径**:
+2. **检�?URL 路径**:
 ```bash
 # LangGraph API
 curl http://localhost:2026/api/langgraph/threads
@@ -345,20 +323,17 @@ curl http://localhost:2026/api/models
 
 ### 2. API 返回 500
 
-**问题**: 服务器内部错误
-
+**问题**: 服务器内部错�?
 **排查步骤**:
 
-1. **查看服务器日志**:
+1. **查看服务器日�?*:
 ```bash
 # LangGraph 日志
-make dev  # 查看控制台输出
-
+make dev  # 查看控制台输�?
 # Gateway 日志
-make gateway  # 查看控制台输出
-```
+make gateway  # 查看控制台输�?```
 
-2. **检查堆栈跟踪**:
+2. **检查堆栈跟�?*:
 ```python
 # 在代码中添加详细日志
 import traceback
@@ -372,16 +347,13 @@ except Exception as e:
 
 ### 3. CORS 错误
 
-**问题**: 跨域请求被阻止
-
+**问题**: 跨域请求被阻�?
 **解决方案**:
 ```bash
-# 检查 nginx 配置
+# 检�?nginx 配置
 cat docker/nginx/nginx.local.conf
 
-# 确保 CORS 头正确
-# 通常是前端端口不匹配导致的
-```
+# 确保 CORS 头正�?# 通常是前端端口不匹配导致�?```
 
 ## 性能问题
 
@@ -389,7 +361,7 @@ cat docker/nginx/nginx.local.conf
 
 **排查步骤**:
 
-1. **检查模型响应时间**:
+1. **检查模型响应时�?*:
 ```bash
 # 测试模型 API 延迟
 python -c "
@@ -404,8 +376,7 @@ print(f'Latency: {time.time() - start}s')
 
 2. **检查中间件执行时间**:
 ```python
-# 在中间件中添加计时
-import time
+# 在中间件中添加计�?import time
 
 class TimedMiddleware:
     def before_model(self, state, config):
@@ -433,7 +404,7 @@ vm_stat
 # Linux
 free -h
 
-# 或使用 Python
+# 或使�?Python
 python -c "
 import psutil
 process = psutil.Process()
@@ -441,20 +412,17 @@ print(f'Memory: {process.memory_info().rss / 1024 / 1024} MB')
 "
 ```
 
-2. **检查线程状态累积**:
+2. **检查线程状态累�?*:
 ```bash
-# 清理旧线程
-rm -rf backend/.deer-flow/threads/old-thread-id
+# 清理旧线�?rm -rf backend/magic-floww/threads/old-thread-id
 ```
 
-### 3. Token 消耗过高
-
+### 3. Token 消耗过�?
 **排查步骤**:
 
-1. **检查消息历史长度**:
+1. **检查消息历史长�?*:
 ```python
-# 在 ThreadState 中检查
-print(f"Messages: {len(state['messages'])}")
+# �?ThreadState 中检�?print(f"Messages: {len(state['messages'])}")
 ```
 
 2. **启用摘要功能**:
@@ -465,8 +433,7 @@ summarization:
   max_tokens: 8000
 ```
 
-## 调试技巧
-
+## 调试技�?
 ### 1. 启用详细日志
 
 ```bash
@@ -483,17 +450,15 @@ make dev
 # 配置环境变量
 export LANGCHAIN_TRACING_V2=true
 export LANGCHAIN_API_KEY=ls-...
-export LANGCHAIN_PROJECT=deer-flow-debug
+export LANGCHAIN_PROJECT=magic-flow-debug
 
 # 查看追踪
 # 访问 https://smith.langchain.com
 ```
 
-### 3. 检查线程状态
-
+### 3. 检查线程状�?
 ```python
-# 获取线程状态
-python -c "
+# 获取线程状�?python -c "
 from langgraph import Client
 client = Client(api_url='http://localhost:2024')
 state = client.threads.get_state('thread-id')
@@ -517,8 +482,7 @@ from src.sandbox.tools import bash_tool
 print(bash_tool.invoke({'command': 'echo hello'}))
 "
 
-# 测试中间件
-python -c "
+# 测试中间�?python -c "
 from src.agents.middlewares.memory_middleware import MemoryMiddleware
 m = MemoryMiddleware()
 print(m.before_model({'messages': []}, {}))
@@ -532,8 +496,7 @@ print(m.before_model({'messages': []}, {}))
 import pdb; pdb.set_trace()
 
 # 常用命令
-# n - 下一行
-# s - 进入函数
+# n - 下一�?# s - 进入函数
 # c - 继续执行
 # p variable - 打印变量
 # l - 显示代码
@@ -549,33 +512,27 @@ A:
 make stop
 
 # 删除数据目录
-rm -rf backend/.deer-flow/
+rm -rf backend/.magic-flow/
 
 # 重新启动
 make dev
 ```
 
-### Q: 如何更新依赖？
-
+### Q: 如何更新依赖�?
 A:
 ```bash
 # 更新 pyproject.toml 中的版本
 # 然后运行
 make install
 
-# 或更新所有依赖
-uv sync --upgrade
+# 或更新所有依�?uv sync --upgrade
 ```
 
 ### Q: 如何添加新的 LLM 提供商？
 
 A:
-1. 安装提供商的 LangChain 包
-2. 在 `config.yaml` 中添加模型配置
-3. 在 `src/models/factory.py` 中添加支持
-
-### Q: 如何备份配置？
-
+1. 安装提供商的 LangChain �?2. �?`config.yaml` 中添加模型配�?3. �?`src/models/factory.py` 中添加支�?
+### Q: 如何备份配置�?
 A:
 ```bash
 # 备份配置
@@ -583,11 +540,10 @@ cp config.yaml config.yaml.backup
 cp extensions_config.json extensions_config.json.backup
 
 # 备份数据
-tar -czvf deer-flow-backup.tar.gz backend/.deer-flow/
+tar -czvf magic-flow-backup.tar.gz backend/.magic-flow/
 ```
 
-### Q: 如何查看所有可用的工具？
-
+### Q: 如何查看所有可用的工具�?
 A:
 ```python
 python -c "
@@ -610,37 +566,31 @@ make dev 2>&1 | tee langgraph.log
 make gateway 2>&1 | tee gateway.log
 ```
 
-### 2. 检查系统状态
-
+### 2. 检查系统状�?
 ```bash
-# 检查端口
-netstat -tuln | grep -E '2024|8001|2026'
+# 检查端�?netstat -tuln | grep -E '2024|8001|2026'
 
-# 检查进程
-ps aux | grep -E 'langgraph|uvicorn|nginx'
+# 检查进�?ps aux | grep -E 'langgraph|uvicorn|nginx'
 
-# 检查磁盘空间
-df -h
+# 检查磁盘空�?df -h
 ```
 
 ### 3. 社区支持
 
-- GitHub Issues: https://github.com/bytedance/deer-flow/issues
-- 官方文档: https://deerflow.tech/
+- GitHub Issues: https://github.com/bytedance/magic-flow/issues
+- 官方文档: https://magicflow.tech/
 - LangGraph 文档: https://langchain-ai.github.io/langgraph/
 
 ---
 
-## 快速诊断清单
-
+## 快速诊断清�?
 遇到问题时，按顺序检查：
 
 1. [ ] Python 版本 >= 3.12
-2. [ ] uv 已安装
-3. [ ] 依赖已安装 (`make install`)
+2. [ ] uv 已安�?3. [ ] 依赖已安�?(`make install`)
 4. [ ] 配置文件存在 (`config.yaml`)
-5. [ ] 环境变量已设置 (`env | grep API_KEY`)
+5. [ ] 环境变量已设�?(`env | grep API_KEY`)
 6. [ ] 端口未被占用
-7. [ ] 服务已启动 (`make dev` / `make gateway`)
-8. [ ] 日志无错误
-9. [ ] API 可访问 (`curl http://localhost:2026/api/models`)
+7. [ ] 服务已启�?(`make dev` / `make gateway`)
+8. [ ] 日志无错�?9. [ ] API 可访�?(`curl http://localhost:2026/api/models`)
+

@@ -1,6 +1,6 @@
 # The Leica Master's Eye: Capturing the Decisive Moment in the Age of AI
 
-*By DeerFlow 2.0 | January 28, 2026*
+*By magicflow 2.0 | January 28, 2026*
 
 ## The Enduring Legacy of Leica Street Photography
 
@@ -103,3 +103,4 @@ As AI continues to evolve, the most compelling work will likely come from those 
 ---
 
 *All images generated using structured prompt engineering based on Leica photography research. Prompts available upon request.*
+

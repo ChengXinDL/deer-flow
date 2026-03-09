@@ -1,4 +1,4 @@
-"""DeerFlow Sandbox Provisioner Service.
+"""magicflow Sandbox Provisioner Service.
 
 Dynamically creates and manages per-sandbox Pods in Kubernetes.
 Each ``sandbox_id`` gets its own Pod + NodePort Service.  The backend
@@ -9,23 +9,15 @@ mounted kubeconfig (``~/.kube/config``).  Sandbox Pods run on the host
 K8s and are accessed by the backend via ``{NODE_HOST}:{NodePort}``.
 
 Endpoints:
-    POST   /api/sandboxes              — Create a sandbox Pod + Service
-    DELETE /api/sandboxes/{sandbox_id} — Destroy a sandbox Pod + Service
-    GET    /api/sandboxes/{sandbox_id} — Get sandbox status & URL
-    GET    /api/sandboxes              — List all sandboxes
-    GET    /health                     — Provisioner health check
+    POST   /api/sandboxes              �?Create a sandbox Pod + Service
+    DELETE /api/sandboxes/{sandbox_id} �?Destroy a sandbox Pod + Service
+    GET    /api/sandboxes/{sandbox_id} �?Get sandbox status & URL
+    GET    /api/sandboxes              �?List all sandboxes
+    GET    /health                     �?Provisioner health check
 
 Architecture (docker-compose-dev):
-    ┌────────────┐  HTTP  ┌─────────────┐  K8s API  ┌──────────────┐
-    │ remote     │ ─────▸ │ provisioner │ ────────▸ │  host K8s    │
-    │ _backend   │        │ :8002       │           │  API server  │
-    └────────────┘        └─────────────┘           └──────┬───────┘
-                                                           │ creates
-                          ┌─────────────┐           ┌──────▼───────┐
-                          │   backend   │ ────────▸ │   sandbox    │
-                          │             │  direct   │   Pod(s)     │
-                          └─────────────┘ NodePort  └──────────────┘
-"""
+    ┌────────────�? HTTP  ┌─────────────�? K8s API  ┌──────────────�?    �?remote     �?─────�?�?provisioner �?────────�?�? host K8s    �?    �?_backend   �?       �?:8002       �?          �? API server  �?    └────────────�?       └─────────────�?          └──────┬───────�?                                                           �?creates
+                          ┌─────────────�?          ┌──────▼───────�?                          �?  backend   �?────────�?�?  sandbox    �?                          �?            �? direct   �?  Pod(s)     �?                          └─────────────�?NodePort  └──────────────�?"""
 
 from __future__ import annotations
 
@@ -52,13 +44,13 @@ logging.basicConfig(
 
 # ── Configuration (all tuneable via environment variables) ───────────────
 
-K8S_NAMESPACE = os.environ.get("K8S_NAMESPACE", "deer-flow")
+K8S_NAMESPACE = os.environ.get("K8S_NAMESPACE", "magic-flow")
 SANDBOX_IMAGE = os.environ.get(
     "SANDBOX_IMAGE",
     "enterprise-public-cn-beijing.cr.volces.com/vefaas-public/all-in-one-sandbox:latest",
 )
 SKILLS_HOST_PATH = os.environ.get("SKILLS_HOST_PATH", "/skills")
-THREADS_HOST_PATH = os.environ.get("THREADS_HOST_PATH", "/.deer-flow/threads")
+THREADS_HOST_PATH = os.environ.get("THREADS_HOST_PATH", "/.magic-flow/threads")
 
 # Path to the kubeconfig *inside* the provisioner container.
 # Typically the host's ~/.kube/config is mounted here.
@@ -135,7 +127,7 @@ def _wait_for_kubeconfig(timeout: int = 30) -> None:
             raise RuntimeError(
                 f"Kubeconfig path exists but is not a regular file: {KUBECONFIG_PATH}"
             )
-        logger.info(f"Waiting for kubeconfig at {KUBECONFIG_PATH} …")
+        logger.info(f"Waiting for kubeconfig at {KUBECONFIG_PATH} �?)
         time.sleep(2)
     logger.warning(
         f"Kubeconfig not found at {KUBECONFIG_PATH} after {timeout}s; "
@@ -154,7 +146,7 @@ def _ensure_namespace() -> None:
                 metadata=k8s_client.V1ObjectMeta(
                     name=K8S_NAMESPACE,
                     labels={
-                        "app.kubernetes.io/name": "deer-flow",
+                        "app.kubernetes.io/name": "magic-flow",
                         "app.kubernetes.io/component": "sandbox",
                     },
                 )
@@ -178,7 +170,7 @@ async def lifespan(_app: FastAPI):
     yield
 
 
-app = FastAPI(title="DeerFlow Sandbox Provisioner", lifespan=lifespan)
+app = FastAPI(title="magicflow Sandbox Provisioner", lifespan=lifespan)
 
 
 # ── Request / Response models ───────────────────────────────────────────
@@ -218,9 +210,9 @@ def _build_pod(sandbox_id: str, thread_id: str) -> k8s_client.V1Pod:
             name=_pod_name(sandbox_id),
             namespace=K8S_NAMESPACE,
             labels={
-                "app": "deer-flow-sandbox",
+                "app": "magic-flow-sandbox",
                 "sandbox-id": sandbox_id,
-                "app.kubernetes.io/name": "deer-flow",
+                "app.kubernetes.io/name": "magic-flow",
                 "app.kubernetes.io/component": "sandbox",
             },
         ),
@@ -315,9 +307,9 @@ def _build_service(sandbox_id: str) -> k8s_client.V1Service:
             name=_svc_name(sandbox_id),
             namespace=K8S_NAMESPACE,
             labels={
-                "app": "deer-flow-sandbox",
+                "app": "magic-flow-sandbox",
                 "sandbox-id": sandbox_id,
-                "app.kubernetes.io/name": "deer-flow",
+                "app.kubernetes.io/name": "magic-flow",
                 "app.kubernetes.io/component": "sandbox",
             },
         ),
@@ -329,7 +321,7 @@ def _build_service(sandbox_id: str) -> k8s_client.V1Service:
                     port=8080,
                     target_port=8080,
                     protocol="TCP",
-                    # nodePort omitted → K8s auto-allocates from the range
+                    # nodePort omitted �?K8s auto-allocates from the range
                 )
             ],
             selector={
@@ -486,7 +478,7 @@ async def list_sandboxes():
     try:
         services = core_v1.list_namespaced_service(
             K8S_NAMESPACE,
-            label_selector="app=deer-flow-sandbox",
+            label_selector="app=magic-flow-sandbox",
         )
     except ApiException as exc:
         raise HTTPException(
@@ -513,3 +505,4 @@ async def list_sandboxes():
             )
 
     return {"sandboxes": sandboxes, "count": len(sandboxes)}
+

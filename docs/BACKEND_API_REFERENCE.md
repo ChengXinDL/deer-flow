@@ -1,22 +1,18 @@
-# DeerFlow 后端 API 参考文档
-
+# magicflow 后端 API 参考文�?
 ## 概述
 
-DeerFlow 后端暴露两组 API：
-
+magicflow 后端暴露两组 API�?
 1. **LangGraph API** - Agent 交互、线程和流式传输 (`/api/langgraph/*`)
 2. **Gateway API** - 模型、MCP、技能、上传和工件 (`/api/*`)
 
-所有 API 通过 Nginx 反向代理在端口 2026 访问。
-
+所�?API 通过 Nginx 反向代理在端�?2026 访问�?
 ---
 
 ## LangGraph API
 
 **Base URL**: `/api/langgraph`
 
-由 LangGraph 服务器提供，遵循 LangGraph SDK 规范。
-
+�?LangGraph 服务器提供，遵循 LangGraph SDK 规范�?
 ### 线程管理
 
 #### 创建线程
@@ -26,11 +22,11 @@ POST /api/langgraph/threads
 Content-Type: application/json
 ```
 
-**请求体**:
+**请求�?*:
 ```json
 {
   "metadata": {
-    "title": "新对话"
+    "title": "新对�?
   }
 }
 ```
@@ -41,13 +37,12 @@ Content-Type: application/json
   "thread_id": "abc123",
   "created_at": "2024-01-15T10:30:00Z",
   "metadata": {
-    "title": "新对话"
+    "title": "新对�?
   }
 }
 ```
 
-#### 获取线程状态
-
+#### 获取线程状�?
 ```http
 GET /api/langgraph/threads/{thread_id}/state
 ```
@@ -98,14 +93,13 @@ DELETE /api/langgraph/threads/{thread_id}
 
 #### 创建运行
 
-执行 Agent 并传入输入。
-
+执行 Agent 并传入输入�?
 ```http
 POST /api/langgraph/threads/{thread_id}/runs
 Content-Type: application/json
 ```
 
-**请求体**:
+**请求�?*:
 ```json
 {
   "input": {
@@ -129,17 +123,15 @@ Content-Type: application/json
 
 **Configurable 选项**:
 - `model_name` (string): 覆盖默认模型
-- `thinking_enabled` (boolean): 启用扩展思考模式
-- `is_plan_mode` (boolean): 启用任务跟踪模式
+- `thinking_enabled` (boolean): 启用扩展思考模�?- `is_plan_mode` (boolean): 启用任务跟踪模式
 
-**响应**: Server-Sent Events (SSE) 流
-
+**响应**: Server-Sent Events (SSE) �?
 ```
 event: values
 data: {"messages": [...], "title": "..."}
 
 event: messages
-data: {"content": "你好！我很乐意帮忙。", "role": "assistant"}
+data: {"content": "你好！我很乐意帮忙�?, "role": "assistant"}
 
 event: end
 data: {}
@@ -147,15 +139,13 @@ data: {}
 
 #### 流式运行
 
-实时流式响应。
-
+实时流式响应�?
 ```http
 POST /api/langgraph/threads/{thread_id}/runs/stream
 Content-Type: application/json
 ```
 
-请求体与创建运行相同。返回 SSE 流。
-
+请求体与创建运行相同。返�?SSE 流�?
 #### 获取运行列表
 
 ```http
@@ -179,13 +169,13 @@ GET /api/langgraph/threads/{thread_id}/runs
 
 | 事件 | 说明 |
 |------|------|
-| `values` | 完整状态值 |
-| `values/partial` | 部分状态更新 |
+| `values` | 完整状态�?|
+| `values/partial` | 部分状态更�?|
 | `messages` | 完整消息 |
 | `messages/partial` | 部分消息内容 |
-| `updates` | 状态更新 |
+| `updates` | 状态更�?|
 | `error` | 错误信息 |
-| `end` | 流结束 |
+| `end` | 流结�?|
 
 ---
 
@@ -193,14 +183,12 @@ GET /api/langgraph/threads/{thread_id}/runs
 
 **Base URL**: `/api`
 
-由 FastAPI 应用提供，处理非 Agent 操作。
-
+�?FastAPI 应用提供，处理非 Agent 操作�?
 ### 模型 API
 
 #### 列出模型
 
-获取配置中所有可用的 LLM 模型。
-
+获取配置中所有可用的 LLM 模型�?
 ```http
 GET /api/models
 ```
@@ -282,7 +270,7 @@ PUT /api/mcp/config
 Content-Type: application/json
 ```
 
-**请求体**:
+**请求�?*:
 ```json
 {
   "mcpServers": {
@@ -301,10 +289,9 @@ Content-Type: application/json
 
 **响应**: `200 OK`
 
-### 技能 API
+### 技�?API
 
-#### 列出技能
-
+#### 列出技�?
 ```http
 GET /api/skills
 ```
@@ -324,8 +311,7 @@ GET /api/skills
 }
 ```
 
-#### 获取技能详情
-
+#### 获取技能详�?
 ```http
 GET /api/skills/{skill_name}
 ```
@@ -337,34 +323,32 @@ GET /api/skills/{skill_name}
   "display_name": "Research",
   "description": "Deep research on any topic",
   "version": "1.0.0",
-  "author": "DeerFlow Team",
+  "author": "magicflow Team",
   "content": "# Research Skill\n\n...",
   "enabled": true
 }
 ```
 
-#### 更新技能状态
-
+#### 更新技能状�?
 ```http
 PUT /api/skills/{skill_name}
 Content-Type: application/json
 ```
 
-**请求体**:
+**请求�?*:
 ```json
 {
   "enabled": false
 }
 ```
 
-#### 安装技能
-
+#### 安装技�?
 ```http
 POST /api/skills/install
 Content-Type: multipart/form-data
 ```
 
-**请求体**:
+**请求�?*:
 - `file`: `.skill` 归档文件
 
 **响应**:
@@ -456,7 +440,7 @@ POST /api/threads/{thread_id}/uploads
 Content-Type: multipart/form-data
 ```
 
-**请求体**:
+**请求�?*:
 - `files`: 一个或多个文件
 
 **响应**:
@@ -467,11 +451,11 @@ Content-Type: multipart/form-data
     {
       "filename": "document.pdf",
       "size": 1234567,
-      "path": ".deer-flow/threads/{thread_id}/user-data/uploads/document.pdf",
+      "path": ".magic-flow/threads/{thread_id}/user-data/uploads/document.pdf",
       "virtual_path": "/mnt/user-data/uploads/document.pdf",
       "artifact_url": "/api/threads/{thread_id}/artifacts/mnt/user-data/uploads/document.pdf",
       "markdown_file": "document.md",
-      "markdown_path": ".deer-flow/threads/{thread_id}/user-data/uploads/document.md",
+      "markdown_path": ".magic-flow/threads/{thread_id}/user-data/uploads/document.md",
       "markdown_virtual_path": "/mnt/user-data/uploads/document.md"
     }
   ],
@@ -479,14 +463,13 @@ Content-Type: multipart/form-data
 }
 ```
 
-**支持的自动转换格式**:
+**支持的自动转换格�?*:
 - PDF (`.pdf`)
 - PowerPoint (`.ppt`, `.pptx`)
 - Excel (`.xls`, `.xlsx`)
 - Word (`.doc`, `.docx`)
 
-#### 列出已上传文件
-
+#### 列出已上传文�?
 ```http
 GET /api/threads/{thread_id}/uploads/list
 ```
@@ -498,7 +481,7 @@ GET /api/threads/{thread_id}/uploads/list
     {
       "filename": "document.pdf",
       "size": 1234567,
-      "path": ".deer-flow/threads/{thread_id}/user-data/uploads/document.pdf",
+      "path": ".magic-flow/threads/{thread_id}/user-data/uploads/document.pdf",
       "virtual_path": "/mnt/user-data/uploads/document.pdf",
       "artifact_url": "/api/threads/{thread_id}/artifacts/mnt/user-data/uploads/document.pdf",
       "extension": ".pdf",
@@ -552,40 +535,37 @@ GET /api/threads/{thread_id}/artifacts/{path}
 }
 ```
 
-### 常见错误码
-
-| 状态码 | 错误码 | 说明 |
+### 常见错误�?
+| 状态码 | 错误�?| 说明 |
 |--------|--------|------|
 | 400 | `BAD_REQUEST` | 请求参数错误 |
-| 401 | `UNAUTHORIZED` | 未授权 |
-| 404 | `NOT_FOUND` | 资源不存在 |
+| 401 | `UNAUTHORIZED` | 未授�?|
+| 404 | `NOT_FOUND` | 资源不存�?|
 | 409 | `CONFLICT` | 资源冲突 |
 | 422 | `VALIDATION_ERROR` | 验证错误 |
 | 429 | `RATE_LIMITED` | 请求过于频繁 |
-| 500 | `INTERNAL_ERROR` | 服务器内部错误 |
+| 500 | `INTERNAL_ERROR` | 服务器内部错�?|
 
 ### LangGraph 特定错误
 
-| 错误码 | 说明 |
+| 错误�?| 说明 |
 |--------|------|
-| `THREAD_NOT_FOUND` | 线程不存在 |
-| `ASSISTANT_NOT_FOUND` | Assistant 不存在 |
-| `RUN_NOT_FOUND` | 运行不存在 |
+| `THREAD_NOT_FOUND` | 线程不存�?|
+| `ASSISTANT_NOT_FOUND` | Assistant 不存�?|
+| `RUN_NOT_FOUND` | 运行不存�?|
 | `INVALID_CONFIG` | 配置无效 |
 
 ---
 
 ## 认证
 
-目前 DeerFlow 使用简单的 API key 认证：
-
+目前 magicflow 使用简单的 API key 认证�?
 ```http
 GET /api/models
 Authorization: Bearer {api_key}
 ```
 
-或在请求头中：
-
+或在请求头中�?
 ```http
 GET /api/models
 X-API-Key: {api_key}
@@ -595,8 +575,7 @@ X-API-Key: {api_key}
 
 ## 速率限制
 
-默认速率限制：
-
+默认速率限制�?
 | 端点 | 限制 |
 |------|------|
 | `/api/langgraph/*` | 100 请求/分钟 |
@@ -624,8 +603,7 @@ client = Client(api_url="http://localhost:2026/api/langgraph")
 # 创建线程
 thread = client.threads.create()
 
-# 发送消息
-stream = client.runs.stream(
+# 发送消�?stream = client.runs.stream(
     thread.thread_id,
     "lead_agent",
     input={"messages": [{"role": "user", "content": "Hello"}]}
@@ -647,8 +625,7 @@ const client = new Client({
 // 创建线程
 const thread = await client.threads.create();
 
-// 发送消息
-const stream = await client.runs.stream(
+// 发送消�?const stream = await client.runs.stream(
   thread.thread_id,
   'lead_agent',
   {
@@ -669,11 +646,11 @@ curl -X POST http://localhost:2026/api/langgraph/threads \
   -H "Content-Type: application/json" \
   -d '{"metadata": {}}'
 
-# 发送消息（流式）
-curl -X POST http://localhost:2026/api/langgraph/threads/{thread_id}/runs/stream \
+# 发送消息（流式�?curl -X POST http://localhost:2026/api/langgraph/threads/{thread_id}/runs/stream \
   -H "Content-Type: application/json" \
   -d '{
     "input": {"messages": [{"role": "user", "content": "Hello"}]},
     "stream_mode": ["messages"]
   }'
 ```
+

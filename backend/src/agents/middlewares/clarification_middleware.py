@@ -1,7 +1,6 @@
 """Middleware for intercepting clarification requests and presenting them to the user."""
 
 from collections.abc import Callable
-from typing import override
 
 from langchain.agents import AgentState
 from langchain.agents.middleware import AgentMiddleware
@@ -128,7 +127,6 @@ class ClarificationMiddleware(AgentMiddleware[ClarificationMiddlewareState]):
             goto=END,
         )
 
-    @override
     def wrap_tool_call(
         self,
         request: ToolCallRequest,
@@ -150,7 +148,6 @@ class ClarificationMiddleware(AgentMiddleware[ClarificationMiddlewareState]):
 
         return self._handle_clarification(request)
 
-    @override
     async def awrap_tool_call(
         self,
         request: ToolCallRequest,

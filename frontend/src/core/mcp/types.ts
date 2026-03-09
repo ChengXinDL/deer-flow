@@ -1,4 +1,4 @@
-export interface MCPServerConfig extends Record<string, unknown> {
+﻿export interface MCPServerConfig extends Record<string, unknown> {
   enabled: boolean;
   description: string;
 }

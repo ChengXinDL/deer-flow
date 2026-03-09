@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-DeerFlow is a LangGraph-based AI super agent system with a full-stack architecture. The backend provides a "super agent" with sandbox execution, persistent memory, subagent delegation, and extensible tool integration - all operating in per-thread isolated environments.
+magicflow is a LangGraph-based AI super agent system with a full-stack architecture. The backend provides a "super agent" with sandbox execution, persistent memory, subagent delegation, and extensible tool integration - all operating in per-thread isolated environments.
 
 **Architecture**:
 - **LangGraph Server** (port 2024): Agent runtime and workflow execution
@@ -15,42 +15,42 @@ DeerFlow is a LangGraph-based AI super agent system with a full-stack architectu
 
 **Project Structure**:
 ```
-deer-flow/
+magic-flow/
 ├── Makefile                    # Root commands (check, install, dev, stop)
 ├── config.yaml                 # Main application configuration
 ├── extensions_config.json      # MCP servers and skills configuration
 ├── backend/                    # Backend application (this directory)
-│   ├── Makefile               # Backend-only commands (dev, gateway, lint)
-│   ├── langgraph.json         # LangGraph server configuration
-│   ├── src/
-│   │   ├── agents/            # LangGraph agent system
-│   │   │   ├── lead_agent/    # Main agent (factory + system prompt)
-│   │   │   ├── middlewares/   # 10 middleware components
-│   │   │   ├── memory/        # Memory extraction, queue, prompts
-│   │   │   └── thread_state.py # ThreadState schema
-│   │   ├── gateway/           # FastAPI Gateway API
-│   │   │   ├── app.py         # FastAPI application
-│   │   │   └── routers/       # 6 route modules
-│   │   ├── sandbox/           # Sandbox execution system
-│   │   │   ├── local/         # Local filesystem provider
-│   │   │   ├── sandbox.py     # Abstract Sandbox interface
-│   │   │   ├── tools.py       # bash, ls, read/write/str_replace
-│   │   │   └── middleware.py  # Sandbox lifecycle management
-│   │   ├── subagents/         # Subagent delegation system
-│   │   │   ├── builtins/      # general-purpose, bash agents
-│   │   │   ├── executor.py    # Background execution engine
-│   │   │   └── registry.py    # Agent registry
-│   │   ├── tools/builtins/    # Built-in tools (present_files, ask_clarification, view_image)
-│   │   ├── mcp/               # MCP integration (tools, cache, client)
-│   │   ├── models/            # Model factory with thinking/vision support
-│   │   ├── skills/            # Skills discovery, loading, parsing
-│   │   ├── config/            # Configuration system (app, model, sandbox, tool, etc.)
-│   │   ├── community/         # Community tools (tavily, jina_ai, firecrawl, image_search, aio_sandbox)
-│   │   ├── reflection/        # Dynamic module loading (resolve_variable, resolve_class)
-│   │   ├── utils/             # Utilities (network, readability)
-│   │   └── client.py          # Embedded Python client (DeerFlowClient)
-│   ├── tests/                 # Test suite
-│   └── docs/                  # Documentation
+�?  ├── Makefile               # Backend-only commands (dev, gateway, lint)
+�?  ├── langgraph.json         # LangGraph server configuration
+�?  ├── src/
+�?  �?  ├── agents/            # LangGraph agent system
+�?  �?  �?  ├── lead_agent/    # Main agent (factory + system prompt)
+�?  �?  �?  ├── middlewares/   # 10 middleware components
+�?  �?  �?  ├── memory/        # Memory extraction, queue, prompts
+�?  �?  �?  └── thread_state.py # ThreadState schema
+�?  �?  ├── gateway/           # FastAPI Gateway API
+�?  �?  �?  ├── app.py         # FastAPI application
+�?  �?  �?  └── routers/       # 6 route modules
+�?  �?  ├── sandbox/           # Sandbox execution system
+�?  �?  �?  ├── local/         # Local filesystem provider
+�?  �?  �?  ├── sandbox.py     # Abstract Sandbox interface
+�?  �?  �?  ├── tools.py       # bash, ls, read/write/str_replace
+�?  �?  �?  └── middleware.py  # Sandbox lifecycle management
+�?  �?  ├── subagents/         # Subagent delegation system
+�?  �?  �?  ├── builtins/      # general-purpose, bash agents
+�?  �?  �?  ├── executor.py    # Background execution engine
+�?  �?  �?  └── registry.py    # Agent registry
+�?  �?  ├── tools/builtins/    # Built-in tools (present_files, ask_clarification, view_image)
+�?  �?  ├── mcp/               # MCP integration (tools, cache, client)
+�?  �?  ├── models/            # Model factory with thinking/vision support
+�?  �?  ├── skills/            # Skills discovery, loading, parsing
+�?  �?  ├── config/            # Configuration system (app, model, sandbox, tool, etc.)
+�?  �?  ├── community/         # Community tools (tavily, jina_ai, firecrawl, image_search, aio_sandbox)
+�?  �?  ├── reflection/        # Dynamic module loading (resolve_variable, resolve_class)
+�?  �?  ├── utils/             # Utilities (network, readability)
+�?  �?  └── client.py          # Embedded Python client (magicflowClient)
+�?  ├── tests/                 # Test suite
+�?  └── docs/                  # Documentation
 ├── frontend/                   # Next.js frontend application
 └── skills/                     # Agent skills directory
     ├── public/                # Public skills (committed)
@@ -118,7 +118,7 @@ CI runs these regression tests for every pull request via [.github/workflows/bac
 
 Middlewares execute in strict order in `src/agents/lead_agent/agent.py`:
 
-1. **ThreadDataMiddleware** - Creates per-thread directories (`backend/.deer-flow/threads/{thread_id}/user-data/{workspace,uploads,outputs}`)
+1. **ThreadDataMiddleware** - Creates per-thread directories (`backend/.magic-flow/threads/{thread_id}/user-data/{workspace,uploads,outputs}`)
 2. **UploadsMiddleware** - Tracks and injects newly uploaded files into conversation
 3. **SandboxMiddleware** - Acquires sandbox, stores `sandbox_id` in state
 4. **DanglingToolCallMiddleware** - Injects placeholder ToolMessages for AIMessage tool_calls that lack responses (e.g., due to user interruption)
@@ -138,7 +138,7 @@ Setup: Copy `config.example.yaml` to `config.yaml` in the **project root** direc
 
 Configuration priority:
 1. Explicit `config_path` argument
-2. `DEER_FLOW_CONFIG_PATH` environment variable
+2. `MAGIC_FLOW_CONFIG_PATH` environment variable
 3. `config.yaml` in current directory (backend/)
 4. `config.yaml` in parent directory (project root - **recommended location**)
 
@@ -150,7 +150,7 @@ MCP servers and skills are configured together in `extensions_config.json` in pr
 
 Configuration priority:
 1. Explicit `config_path` argument
-2. `DEER_FLOW_EXTENSIONS_CONFIG_PATH` environment variable
+2. `MAGIC_FLOW_EXTENSIONS_CONFIG_PATH` environment variable
 3. `extensions_config.json` in current directory (backend/)
 4. `extensions_config.json` in parent directory (project root - **recommended location**)
 
@@ -169,7 +169,7 @@ FastAPI application on port 8001 with health check at `GET /health`.
 | **Uploads** (`/api/threads/{id}/uploads`) | `POST /` - upload files (auto-converts PDF/PPT/Excel/Word); `GET /list` - list; `DELETE /{filename}` - delete |
 | **Artifacts** (`/api/threads/{id}/artifacts`) | `GET /{path}` - serve artifacts; `?download=true` for file download |
 
-Proxied through nginx: `/api/langgraph/*` → LangGraph, all other `/api/*` → Gateway.
+Proxied through nginx: `/api/langgraph/*` �?LangGraph, all other `/api/*` �?Gateway.
 
 ### Sandbox System (`src/sandbox/`)
 
@@ -181,7 +181,7 @@ Proxied through nginx: `/api/langgraph/*` → LangGraph, all other `/api/*` → 
 
 **Virtual Path System**:
 - Agent sees: `/mnt/user-data/{workspace,uploads,outputs}`, `/mnt/skills`
-- Physical: `backend/.deer-flow/threads/{thread_id}/user-data/...`, `deer-flow/skills/`
+- Physical: `backend/.magic-flow/threads/{thread_id}/user-data/...`, `magic-flow/skills/`
 - Translation: `replace_virtual_path()` / `replace_virtual_paths_in_command()`
 - Detection: `is_local_sandbox()` checks `sandbox_id == "local"`
 
@@ -197,7 +197,7 @@ Proxied through nginx: `/api/langgraph/*` → LangGraph, all other `/api/*` → 
 **Built-in Agents**: `general-purpose` (all tools except `task`) and `bash` (command specialist)
 **Execution**: Dual thread pool - `_scheduler_pool` (3 workers) + `_execution_pool` (3 workers)
 **Concurrency**: `MAX_CONCURRENT_SUBAGENTS = 3` enforced by `SubagentLimitMiddleware` (truncates excess tool calls in `after_model`), 15-minute timeout
-**Flow**: `task()` tool → `SubagentExecutor` → background thread → poll 5s → SSE events → result
+**Flow**: `task()` tool �?`SubagentExecutor` �?background thread �?poll 5s �?SSE events �?result
 **Events**: `task_started`, `task_running`, `task_completed`/`task_failed`/`task_timed_out`
 
 ### Tool System (`src/tools/`)
@@ -207,7 +207,7 @@ Proxied through nginx: `/api/langgraph/*` → LangGraph, all other `/api/*` → 
 2. **MCP tools** - From enabled MCP servers (lazy initialized, cached with mtime invalidation)
 3. **Built-in tools**:
    - `present_files` - Make output files visible to user (only `/mnt/user-data/outputs`)
-   - `ask_clarification` - Request clarification (intercepted by ClarificationMiddleware → interrupts)
+   - `ask_clarification` - Request clarification (intercepted by ClarificationMiddleware �?interrupts)
    - `view_image` - Read image as base64 (added only if model supports vision)
 4. **Subagent tool** (if enabled):
    - `task` - Delegate to subagent (description, prompt, subagent_type, max_turns)
@@ -229,7 +229,7 @@ Proxied through nginx: `/api/langgraph/*` → LangGraph, all other `/api/*` → 
 
 ### Skills System (`src/skills/`)
 
-- **Location**: `deer-flow/skills/{public,custom}/`
+- **Location**: `magic-flow/skills/{public,custom}/`
 - **Format**: Directory with `SKILL.md` (YAML frontmatter: name, description, license, allowed-tools)
 - **Loading**: `load_skills()` recursively scans `skills/{public,custom}` for `SKILL.md`, parses metadata, and reads enabled state from extensions_config.json
 - **Injection**: Enabled skills listed in agent system prompt with container paths
@@ -250,7 +250,7 @@ Proxied through nginx: `/api/langgraph/*` → LangGraph, all other `/api/*` → 
 - `queue.py` - Debounced update queue (per-thread deduplication, configurable wait time)
 - `prompt.py` - Prompt templates for memory updates
 
-**Data Structure** (stored in `backend/.deer-flow/memory.json`):
+**Data Structure** (stored in `backend/.magic-flow/memory.json`):
 - **User Context**: `workContext`, `personalContext`, `topOfMind` (1-3 sentence summaries)
 - **History**: `recentMonths`, `earlierContext`, `longTermBackground`
 - **Facts**: Discrete facts with `id`, `content`, `category` (preference/knowledge/context/behavior/goal), `confidence` (0-1), `createdAt`, `source`
@@ -262,7 +262,7 @@ Proxied through nginx: `/api/langgraph/*` → LangGraph, all other `/api/*` → 
 4. Applies updates atomically (temp file + rename) with cache invalidation
 5. Next interaction injects top 15 facts + context into `<memory>` tags in system prompt
 
-**Configuration** (`config.yaml` → `memory`):
+**Configuration** (`config.yaml` �?`memory`):
 - `enabled` / `injection_enabled` - Master switches
 - `storage_path` - Path to memory.json
 - `debounce_seconds` - Wait time before processing (default: 30)
@@ -289,23 +289,23 @@ Proxied through nginx: `/api/langgraph/*` → LangGraph, all other `/api/*` → 
 - `memory` - Memory system (enabled, storage_path, debounce_seconds, model_name, max_facts, fact_confidence_threshold, injection_enabled, max_injection_tokens)
 
 **`extensions_config.json`**:
-- `mcpServers` - Map of server name → config (enabled, type, command, args, env, url, headers, oauth, description)
-- `skills` - Map of skill name → state (enabled)
+- `mcpServers` - Map of server name �?config (enabled, type, command, args, env, url, headers, oauth, description)
+- `skills` - Map of skill name �?state (enabled)
 
-Both can be modified at runtime via Gateway API endpoints or `DeerFlowClient` methods.
+Both can be modified at runtime via Gateway API endpoints or `magicflowClient` methods.
 
 ### Embedded Client (`src/client.py`)
 
-`DeerFlowClient` provides direct in-process access to all DeerFlow capabilities without HTTP services. All return types align with the Gateway API response schemas, so consumer code works identically in HTTP and embedded modes.
+`magicflowClient` provides direct in-process access to all magicflow capabilities without HTTP services. All return types align with the Gateway API response schemas, so consumer code works identically in HTTP and embedded modes.
 
 **Architecture**: Imports the same `src/` modules that LangGraph Server and Gateway API use. Shares the same config files and data directories. No FastAPI dependency.
 
 **Agent Conversation** (replaces LangGraph Server):
-- `chat(message, thread_id)` — synchronous, returns final text
-- `stream(message, thread_id)` — yields `StreamEvent` aligned with LangGraph SSE protocol:
-  - `"values"` — full state snapshot (title, messages, artifacts)
-  - `"messages-tuple"` — per-message update (AI text, tool calls, tool results)
-  - `"end"` — stream finished
+- `chat(message, thread_id)` �?synchronous, returns final text
+- `stream(message, thread_id)` �?yields `StreamEvent` aligned with LangGraph SSE protocol:
+  - `"values"` �?full state snapshot (title, messages, artifacts)
+  - `"messages-tuple"` �?per-message update (AI text, tool calls, tool results)
+  - `"end"` �?stream finished
 - Agent created lazily via `create_agent()` + `_build_middlewares()`, same as `make_lead_agent`
 - Supports `checkpointer` parameter for state persistence across turns
 - `reset_agent()` forces agent recreation (e.g. after memory or skill changes)
@@ -319,17 +319,17 @@ Both can be modified at runtime via Gateway API endpoints or `DeerFlowClient` me
 | Skills | `list_skills()`, `get_skill(name)`, `update_skill(name, enabled)`, `install_skill(path)` | `{"skills": [...]}` |
 | Memory | `get_memory()`, `reload_memory()`, `get_memory_config()`, `get_memory_status()` | dict |
 | Uploads | `upload_files(thread_id, files)`, `list_uploads(thread_id)`, `delete_upload(thread_id, filename)` | `{"success": true, "files": [...]}`, `{"files": [...], "count": N}` |
-| Artifacts | `get_artifact(thread_id, path)` → `(bytes, mime_type)` | tuple |
+| Artifacts | `get_artifact(thread_id, path)` �?`(bytes, mime_type)` | tuple |
 
 **Key difference from Gateway**: Upload accepts local `Path` objects instead of HTTP `UploadFile`. Artifact returns `(bytes, mime_type)` instead of HTTP Response. `update_mcp_config()` and `update_skill()` automatically invalidate the cached agent.
 
 **Tests**: `tests/test_client.py` (77 unit tests including `TestGatewayConformance`), `tests/test_client_live.py` (live integration tests, requires config.yaml)
 
-**Gateway Conformance Tests** (`TestGatewayConformance`): Validate that every dict-returning client method conforms to the corresponding Gateway Pydantic response model. Each test parses the client output through the Gateway model — if Gateway adds a required field that the client doesn't provide, Pydantic raises `ValidationError` and CI catches the drift. Covers: `ModelsListResponse`, `ModelResponse`, `SkillsListResponse`, `SkillResponse`, `SkillInstallResponse`, `McpConfigResponse`, `UploadResponse`, `MemoryConfigResponse`, `MemoryStatusResponse`.
+**Gateway Conformance Tests** (`TestGatewayConformance`): Validate that every dict-returning client method conforms to the corresponding Gateway Pydantic response model. Each test parses the client output through the Gateway model �?if Gateway adds a required field that the client doesn't provide, Pydantic raises `ValidationError` and CI catches the drift. Covers: `ModelsListResponse`, `ModelResponse`, `SkillsListResponse`, `SkillResponse`, `SkillInstallResponse`, `McpConfigResponse`, `UploadResponse`, `MemoryConfigResponse`, `MemoryStatusResponse`.
 
 ## Development Workflow
 
-### Test-Driven Development (TDD) — MANDATORY
+### Test-Driven Development (TDD) �?MANDATORY
 
 **Every new feature or bug fix MUST be accompanied by unit tests. No exceptions.**
 
@@ -357,9 +357,9 @@ make dev
 This starts all services and makes the application available at `http://localhost:2026`.
 
 **Nginx routing**:
-- `/api/langgraph/*` → LangGraph Server (2024)
-- `/api/*` (other) → Gateway API (8001)
-- `/` (non-API) → Frontend (3000)
+- `/api/langgraph/*` �?LangGraph Server (2024)
+- `/api/*` (other) �?Gateway API (8001)
+- `/` (non-API) �?Frontend (3000)
 
 ### Running Backend Services Separately
 
@@ -440,3 +440,4 @@ See `docs/` directory for detailed documentation:
 - [PATH_EXAMPLES.md](docs/PATH_EXAMPLES.md) - Path types and usage
 - [summarization.md](docs/summarization.md) - Context summarization
 - [plan_mode_usage.md](docs/plan_mode_usage.md) - Plan mode with TodoList
+

@@ -1,4 +1,4 @@
-import type { AIMessage, Message } from "@langchain/langgraph-sdk";
+﻿import type { AIMessage, Message } from "@langchain/langgraph-sdk";
 
 interface GenericMessageGroup<T = string> {
   type: T;
@@ -69,8 +69,10 @@ export function groupMessages<T>(
       ) {
         lastGroup.messages.push(message);
       } else {
-        throw new Error(
-          "Tool message must be matched with a previous assistant message with tool calls",
+        // Skip orphaned tool messages instead of throwing an error
+        // This can happen when the message sequence is incomplete or corrupted
+        console.warn(
+          `Skipping orphaned tool message: ${message.id} (tool: ${message.name})`,
         );
       }
     } else if (message.type === "ai") {

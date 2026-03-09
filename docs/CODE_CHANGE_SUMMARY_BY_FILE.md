@@ -1,11 +1,9 @@
 # 代码更改总结（按文件 diff，细到每一行）
 
-基于 `git diff HEAD` 的完整 diff，按文件列出所有变更。删除/新增文件单独说明。
-
+基于 `git diff HEAD` 的完�?diff，按文件列出所有变更。删�?新增文件单独说明�?
 ---
 
-## 一、后端
-
+## 一、后�?
 ### 1. `backend/CLAUDE.md`
 
 ```diff
@@ -16,11 +14,10 @@
 -| **Artifacts** (`/api/threads/{id}/artifacts`) | `GET /{path}` - serve artifacts; `?download=true` for download with citation removal |
 +| **Artifacts** (`/api/threads/{id}/artifacts`) | `GET /{path}` - serve artifacts; `?download=true` for file download |
 
- Proxied through nginx: `/api/langgraph/*` → LangGraph, all other `/api/*` → Gateway.
+ Proxied through nginx: `/api/langgraph/*` �?LangGraph, all other `/api/*` �?Gateway.
 ```
 
-- **第 159 行**：表格中 Artifacts 描述由「download with citation removal」改为「file download」。
-
+- **�?159 �?*：表格中 Artifacts 描述由「download with citation removal」改为「file download」�?
 ---
 
 ### 2. `backend/src/agents/lead_agent/prompt.py`
@@ -72,8 +69,7 @@
      )
 ```
 
-- **删除**：`<citations_format>...</citations_format>` 整段（原约 243–266 行）、critical_reminders 中「Web search citations」一条、`apply_prompt_template` 中「Citations when synthesizing」一行。
-
+- **删除**：`<citations_format>...</citations_format>` 整段（原�?243�?66 行）、critical_reminders 中「Web search citations」一条、`apply_prompt_template` 中「Citations when synthesizing」一行�?
 ---
 
 ### 3. `backend/src/gateway/routers/artifacts.py`
@@ -95,10 +91,7 @@
  from src.gateway.path_utils import resolve_thread_virtual_path
 ```
 
-- **第 1 行**：删除 `import json`。
-- **第 3 行**：删除 `import re`。
-- **第 6–7 行**：`fastapi` 中去掉 `Response`；`fastapi.responses` 中增加 `Response`（保留二进制 inline 返回用）。
-
+- **�?1 �?*：删�?`import json`�?- **�?3 �?*：删�?`import re`�?- **�?6�? �?*：`fastapi` 中去�?`Response`；`fastapi.responses` 中增�?`Response`（保留二进制 inline 返回用）�?
 ```diff
 @@ -24,40 +22,6 @@ def is_text_file_by_content(path: Path, sample_size: int = 8192) -> bool:
          return False
@@ -115,7 +108,7 @@
 -                    obj = json.loads(line)
 -                    if "url" in obj:
 -                        urls.add(obj["url"])
--                except (json.JSONDecodeError, ValueError):
+-                except (json.JSONDecoMAGICror, ValueError):
 -                    pass
 -    return urls
 -
@@ -141,8 +134,7 @@
  def _extract_file_from_skill_archive(zip_path: Path, internal_path: str) -> bytes | None:
 ```
 
-- **删除**：`_extract_citation_urls`、`remove_citations_block` 两个函数（约 25–62 行）。
-
+- **删除**：`_extract_citation_urls`、`remove_citations_block` 两个函数（约 25�?2 行）�?
 ```diff
 @@ -172,24 +136,9 @@ async def get_artifact(thread_id: str, path: str, request: Request) -> FileRespo
  
@@ -172,8 +164,7 @@
      if mime_type and mime_type == "text/html":
 ```
 
-- **删除**：`is_markdown` 判断及「markdown 时读文件 + remove_citations_block + Response」分支；download 时统一走 `FileResponse`。
-
+- **删除**：`is_markdown` 判断及「markdown 时读文件 + remove_citations_block + Response」分支；download 时统一�?`FileResponse`�?
 ---
 
 ### 4. `backend/src/subagents/builtins/general_purpose.py`
@@ -204,9 +195,7 @@
  </output_format>
 ```
 
-- **删除**：`<citations_format>...</citations_format>` 整段。
-- **第 40 行**：第 2 条由「Key findings or results (with citation links when from web search)」改为「Key findings or results」。
-
+- **删除**：`<citations_format>...</citations_format>` 整段�?- **�?40 �?*：第 2 条由「Key findings or results (with citation links when from web search)」改为「Key findings or results」�?
 ---
 
 ## 二、前端文档与工具
@@ -216,21 +205,20 @@
 ```diff
 @@ -49,7 +49,6 @@ src/
  ├── core/                   # Core business logic
- │   ├── api/                # API client & data fetching
- │   ├── artifacts/          # Artifact management
--│   ├── citations/          # Citation handling
- │   ├── config/              # App configuration
- │   ├── i18n/               # Internationalization
+ �?  ├── api/                # API client & data fetching
+ �?  ├── artifacts/          # Artifact management
+-�?  ├── citations/          # Citation handling
+ �?  ├── config/              # App configuration
+ �?  ├── i18n/               # Internationalization
 ```
 
-- **第 52 行**：删除目录树中的 `citations/` 一行。
-
+- **�?52 �?*：删除目录树中的 `citations/` 一行�?
 ---
 
 ### 6. `frontend/CLAUDE.md`
 
 ```diff
-@@ -30,7 +30,7 @@ Frontend (Next.js) ──▶ LangGraph SDK ──▶ LangGraph Backend (lead_age
+@@ -30,7 +30,7 @@ Frontend (Next.js) ──�?LangGraph SDK ──�?LangGraph Backend (lead_age
                                                └── Tools & Skills
  ```
  
@@ -240,8 +228,7 @@
  ### Source Layout (`src/`)
 ```
 
-- **第 33 行**：「and **citations**」删除。
-
+- **�?33 �?*：「and **citations**」删除�?
 ---
 
 ### 7. `frontend/README.md`
@@ -249,15 +236,14 @@
 ```diff
 @@ -89,7 +89,6 @@ src/
  ├── core/                   # Core business logic
- │   ├── api/                # API client & data fetching
- │   ├── artifacts/          # Artifact management
--│   ├── citations/          # Citation handling
- │   ├── config/              # App configuration
- │   ├── i18n/               # Internationalization
+ �?  ├── api/                # API client & data fetching
+ �?  ├── artifacts/          # Artifact management
+-�?  ├── citations/          # Citation handling
+ �?  ├── config/              # App configuration
+ �?  ├── i18n/               # Internationalization
 ```
 
-- **第 92 行**：删除目录树中的 `citations/` 一行。
-
+- **�?92 �?*：删除目录树中的 `citations/` 一行�?
 ---
 
 ### 8. `frontend/src/lib/utils.ts`
@@ -272,12 +258,10 @@
  export const externalLinkClassNoUnderline = "text-primary hover:underline";
 ```
 
-- **第 11 行**：仅注释修改，导出值未变。
-
+- **�?11 �?*：仅注释修改，导出值未变�?
 ---
 
-## 三、前端组件
-
+## 三、前端组�?
 ### 9. `frontend/src/components/workspace/artifacts/artifact-file-detail.tsx`
 
 ```diff
@@ -423,9 +407,7 @@
      );
 ```
 
-- 删除：React 命名空间、inline-citation、core/citations、SafeCitationContent、useThread；parsed/cleanContent/contentWithoutCitations 及引用解析逻辑。
-- 新增：`displayContent = content ?? ""`；预览与复制、CodeEditor 均使用 `displayContent`；`ArtifactFilePreview` 仅保留 `content`/`language` 等，去掉 `cleanContent`/`citationMap` 与 `createCitationMarkdownComponents`。
-
+- 删除：React 命名空间、inline-citation、core/citations、SafeCitationContent、useThread；parsed/cleanContent/contentWithoutCitations 及引用解析逻辑�?- 新增：`displayContent = content ?? ""`；预览与复制、CodeEditor 均使�?`displayContent`；`ArtifactFilePreview` 仅保�?`content`/`language` 等，去掉 `cleanContent`/`citationMap` �?`createCitationMarkdownComponents`�?
 ---
 
 ### 10. `frontend/src/components/workspace/messages/message-group.tsx`
@@ -573,8 +555,7 @@
    } else if (name === "bash") {
 ```
 
-- 两处 `SafeCitationContent` → `MarkdownContent`；ToolCall 去掉 `rehypePlugins` 及内部 `useThread`/`fileContent`；write_file 分支去掉 markdown 预览块（`isMarkdown` + `SafeCitationContent`），仅保留 `ChainOfThoughtStep` + path。
-
+- 两处 `SafeCitationContent` �?`MarkdownContent`；ToolCall 去掉 `rehypePlugins` 及内�?`useThread`/`fileContent`；write_file 分支去掉 markdown 预览块（`isMarkdown` + `SafeCitationContent`），仅保�?`ChainOfThoughtStep` + path�?
 ---
 
 ### 11. `frontend/src/components/workspace/messages/message-list-item.tsx`
@@ -620,8 +601,7 @@
          rehypePlugins={[...rehypePlugins, [rehypeKatex, { output: "html" }]]}
 ```
 
-- 删除 `removeAllCitations` 与 `SafeCitationContent` 引用；复制改为原始内容；渲染改为 `MarkdownContent`。
-
+- 删除 `removeAllCitations` �?`SafeCitationContent` 引用；复制改为原始内容；渲染改为 `MarkdownContent`�?
 ---
 
 ### 12. `frontend/src/components/workspace/messages/message-list.tsx`
@@ -655,8 +635,7 @@
                      rehypePlugins={rehypePlugins}
 ```
 
-- 三处：import 与两处渲染均由 `SafeCitationContent` 改为 `MarkdownContent`，props 不变。
-
+- 三处：import 与两处渲染均�?`SafeCitationContent` 改为 `MarkdownContent`，props 不变�?
 ---
 
 ### 13. `frontend/src/components/workspace/messages/subtask-card.tsx`
@@ -680,13 +659,12 @@
                        rehypePlugins={rehypePlugins}
 ```
 
-- import 与一处渲染：`SafeCitationContent` → `MarkdownContent`。
-
+- import 与一处渲染：`SafeCitationContent` �?`MarkdownContent`�?
 ---
 
 ### 14. 新增 `frontend/src/components/workspace/messages/markdown-content.tsx`
 
-（当前工作区新增，未在 git 中）
+（当前工作区新增，未�?git 中）
 
 ```ts
 "use client";
@@ -733,40 +711,34 @@ export function MarkdownContent({
 }
 ```
 
-- 纯 Markdown 渲染组件，无引用解析或 loading 占位逻辑。
-
+- �?Markdown 渲染组件，无引用解析�?loading 占位逻辑�?
 ---
 
 ### 15. 删除 `frontend/src/components/workspace/messages/safe-citation-content.tsx`
 
-- 原约 85 行；提供引用解析、loading、renderBody/loadingOnly、cleanContent/citationMap。已由 `MarkdownContent` 替代，整文件删除。
-
+- 原约 85 行；提供引用解析、loading、renderBody/loadingOnly、cleanContent/citationMap。已�?`MarkdownContent` 替代，整文件删除�?
 ---
 
 ### 16. 删除 `frontend/src/components/ai-elements/inline-citation.tsx`
 
-- 原约 289 行；提供 `createCitationMarkdownComponents` 等，用于将 `[cite-N]`/URL 渲染为可点击引用。仅被 artifact 预览使用，已移除后整文件删除。
-
+- 原约 289 行；提供 `createCitationMarkdownComponents` 等，用于�?`[cite-N]`/URL 渲染为可点击引用。仅�?artifact 预览使用，已移除后整文件删除�?
 ---
 
-## 四、前端 core
+## 四、前�?core
 
 ### 17. 删除 `frontend/src/core/citations/index.ts`
 
-- 原 13 行，导出：`contentWithoutCitationsFromParsed`、`extractDomainFromUrl`、`isExternalUrl`、`parseCitations`、`removeAllCitations`、`shouldShowCitationLoading`、`syntheticCitationFromLink`、`useParsedCitations`、类型 `Citation`/`ParseCitationsResult`/`UseParsedCitationsResult`。整文件删除。
-
+- �?13 行，导出：`contentWithoutCitationsFromParsed`、`extractDomainFromUrl`、`isExternalUrl`、`parseCitations`、`removeAllCitations`、`shouldShowCitationLoading`、`syntheticCitationFromLink`、`useParsedCitations`、类�?`Citation`/`ParseCitationsResult`/`UseParsedCitationsResult`。整文件删除�?
 ---
 
 ### 18. 删除 `frontend/src/core/citations/use-parsed-citations.ts`
 
-- 原 28 行，`useParsedCitations(content)` 与 `UseParsedCitationsResult`。整文件删除。
-
+- �?28 行，`useParsedCitations(content)` �?`UseParsedCitationsResult`。整文件删除�?
 ---
 
 ### 19. 删除 `frontend/src/core/citations/utils.ts`
 
-- 原 226 行，解析 `<citations>`/`[cite-N]`、buildCitationMap、removeAllCitations、contentWithoutCitationsFromParsed 等。整文件删除。
-
+- �?226 行，解析 `<citations>`/`[cite-N]`、buildCitationMap、removeAllCitations、contentWithoutCitationsFromParsed 等。整文件删除�?
 ---
 
 ### 20. `frontend/src/core/i18n/locales/types.ts`
@@ -786,8 +758,7 @@ export function MarkdownContent({
    chats: {
 ```
 
-- 删除 `Translations.citations` 及其两个字段。
-
+- 删除 `Translations.citations` 及其两个字段�?
 ---
 
 ### 21. `frontend/src/core/i18n/locales/zh-CN.ts`
@@ -800,15 +771,14 @@ export function MarkdownContent({
 -  // Citations
 -  citations: {
 -    loadingCitations: "正在整理引用...",
--    loadingCitationsWithCount: (count: number) => `正在整理 ${count} 个引用...`,
+-    loadingCitationsWithCount: (count: number) => `正在整理 ${count} 个引�?..`,
 -  },
 -
    // Chats
    chats: {
 ```
 
-- 删除 `citations` 命名空间。
-
+- 删除 `citations` 命名空间�?
 ---
 
 ### 22. `frontend/src/core/i18n/locales/en-US.ts`
@@ -829,8 +799,7 @@ export function MarkdownContent({
    chats: {
 ```
 
-- 删除 `citations` 命名空间。
-
+- 删除 `citations` 命名空间�?
 ---
 
 ## 五、技能与 Demo
@@ -847,16 +816,15 @@ export function MarkdownContent({
  7. **Update as you go** - Don't wait until end to synthesize
 ```
 
-- 第 150 行：一条措辞修改。
-
+- �?150 行：一条措辞修改�?
 ---
 
 ### 24. `skills/public/market-analysis/SKILL.md`
 
 ```diff
 @@ -15,7 +15,7 @@ This skill generates professional, consulting-grade market analysis reports in M
- - Follow the **"Visual Anchor → Data Contrast → Integrated Analysis"** flow per sub-chapter
- - Produce insights following the **"Data → User Psychology → Strategy Implication"** chain
+ - Follow the **"Visual Anchor �?Data Contrast �?Integrated Analysis"** flow per sub-chapter
+ - Produce insights following the **"Data �?User Psychology �?Strategy Implication"** chain
  - Embed pre-generated charts and construct comparison tables
 -- Generate inline citations formatted per **GB/T 7714-2015** standards
 +- Include references formatted per **GB/T 7714-2015** where applicable
@@ -869,14 +837,14 @@ export function MarkdownContent({
 -| **External Search Findings** | URLs and summaries for inline citations | Optional |
 +| **External Search Findings** | URLs and summaries for inline references | Optional |
  ...
-@@ -87,7 +87,7 @@ The report **MUST NOT** stop after the Conclusion — it **MUST** include Refere
- - **Tone**: McKinsey/BCG — Authoritative, Objective, Professional
+@@ -87,7 +87,7 @@ The report **MUST NOT** stop after the Conclusion �?it **MUST** include Refere
+ - **Tone**: McKinsey/BCG �?Authoritative, Objective, Professional
  - **Language**: All headings and content strictly in **Chinese**
- - **Number Formatting**: Use English commas for thousands separators (`1,000` not `1，000`)
+ - **Number Formatting**: Use English commas for thousands separators (`1,000` not `1�?00`)
 -- **Data Citation**: **Bold** important viewpoints and key numbers
 +- **Data emphasis**: **Bold** important viewpoints and key numbers
  ...
-@@ -109,11 +109,9 @@ Every insight must connect **Data → User Psychology → Strategy Implication**
+@@ -109,11 +109,9 @@ Every insight must connect **Data �?User Psychology �?Strategy Implication**
     treating male audiences only as a secondary gift-giving segment."
  ```
  
@@ -898,42 +866,35 @@ export function MarkdownContent({
  - [ ] References section follows GB/T 7714-2015
 ```
 
-- 多处：核心能力、输入表、Data Citation、Citations & References 小节与检查项，改为「references / 引用」表述并去掉 `[\[N\]](URL)` 格式要求。
-
+- 多处：核心能力、输入表、Data Citation、Citations & References 小节与检查项，改为「references / 引用」表述并去掉 `[\[N\]](URL)` 格式要求�?
 ---
 
-### 25. `frontend/public/demo/threads/.../user-data/outputs/research_deerflow_20260201.md`
+### 25. `frontend/public/demo/threads/.../user-data/outputs/research_magicflow_20260201.md`
 
 ```diff
 @@ -1,12 +1,3 @@
 -<citations>
--{"id": "cite-1", "title": "DeerFlow GitHub Repository", "url": "https://github.com/bytedance/deer-flow", "snippet": "..."}
--...（共 7 条 JSONL）
--</citations>
- # DeerFlow Deep Research Report
+-{"id": "cite-1", "title": "magicflow GitHub Repository", "url": "https://github.com/bytedance/magic-flow", "snippet": "..."}
+-...（共 7 �?JSONL�?-</citations>
+ # magicflow Deep Research Report
  
  - **Research Date:** 2026-02-01
 ```
 
-- 删除文件开头的 `<citations>...</citations>` 整块（9 行），正文从 `# DeerFlow Deep Research Report` 开始。
-
+- 删除文件开头的 `<citations>...</citations>` 整块�? 行），正文从 `# magicflow Deep Research Report` 开始�?
 ---
 
 ### 26. `frontend/public/demo/threads/.../thread.json`
 
-- **主要变更**：某条 `write_file` 的 `args.content` 中，将原来的「`<citations>...\n</citations>\n# DeerFlow Deep Research Report\n\n...`」改为「`# DeerFlow Deep Research Report\n\n...`」，即去掉 `<citations>...</citations>` 块，保留其后全文。
-- **其他**：一处 `present_files` 的 `filepaths` 由单行数组改为多行格式；文件末尾增加/统一换行。
-- 消息顺序、结构及其他字段未改。
-
+- **主要变更**：某�?`write_file` �?`args.content` 中，将原来的「`<citations>...\n</citations>\n# magicflow Deep Research Report\n\n...`」改为「`# magicflow Deep Research Report\n\n...`」，即去�?`<citations>...</citations>` 块，保留其后全文�?- **其他**：一�?`present_files` �?`filepaths` 由单行数组改为多行格式；文件末尾增加/统一换行�?- 消息顺序、结构及其他字段未改�?
 ---
 
-## 六、统计
-
+## 六、统�?
 | 项目 | 数量 |
 |------|------|
 | 修改文件 | 18 |
-| 新增文件 | 1（markdown-content.tsx） |
-| 删除文件 | 5（safe-citation-content.tsx, inline-citation.tsx, core/citations/* 共 3 个） |
-| 总行数变化 | +62 / -894（diff stat） |
+| 新增文件 | 1（markdown-content.tsx�?|
+| 删除文件 | 5（safe-citation-content.tsx, inline-citation.tsx, core/citations/* �?3 个） |
+| 总行数变�?| +62 / -894（diff stat�?|
 
-以上为按文件、细到每一行 diff 的代码更改总结。
+以上为按文件、细到每一�?diff 的代码更改总结�?

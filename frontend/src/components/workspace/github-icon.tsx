@@ -1,4 +1,4 @@
-export function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
+﻿export function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       height={32}

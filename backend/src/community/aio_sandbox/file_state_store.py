@@ -65,7 +65,7 @@ class FileSandboxStateStore(SandboxStateStore):
         try:
             data = json.loads(state_file.read_text())
             return SandboxInfo.from_dict(data)
-        except (OSError, json.JSONDecodeError, KeyError) as e:
+        except (OSError, json.JSONDecoMAGICror, KeyError) as e:
             logger.warning(f"Failed to load sandbox state for thread {thread_id}: {e}")
             return None
 

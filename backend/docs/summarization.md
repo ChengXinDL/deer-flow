@@ -1,6 +1,6 @@
 # Conversation Summarization
 
-DeerFlow includes automatic conversation summarization to handle long conversations that approach model token limits. When enabled, the system automatically condenses older messages while preserving recent context.
+magicflow includes automatic conversation summarization to handle long conversations that approach model token limits. When enabled, the system automatically condenses older messages while preserving recent context.
 
 ## Overview
 
@@ -279,7 +279,7 @@ Summarization runs after ThreadData and Sandbox initialization but before Title 
 
 1. ThreadDataMiddleware
 2. SandboxMiddleware
-3. **SummarizationMiddleware** ‚Üê Runs here
+3. **SummarizationMiddleware** ‚Ü?Runs here
 4. TitleMiddleware
 5. ClarificationMiddleware
 
@@ -351,3 +351,4 @@ summarization:
 
 - [LangChain Summarization Middleware Documentation](https://docs.langchain.com/oss/python/langchain/middleware/built-in#summarization)
 - [LangChain Source Code](https://github.com/langchain-ai/langchain)
+

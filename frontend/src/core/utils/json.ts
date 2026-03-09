@@ -1,4 +1,4 @@
-import { parse } from "best-effort-json-parser";
+﻿import { parse } from "best-effort-json-parser";
 
 export function tryParseJSON(json: string) {
   try {

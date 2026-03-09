@@ -903,16 +903,16 @@ a:hover {
   margin: 0;
 }
 
-.deerflow-branding {
+.magicflow-branding {
   opacity: 0.7;
   transition: opacity var(--transition-fast);
 }
 
-.deerflow-branding:hover {
+.magicflow-branding:hover {
   opacity: 1;
 }
 
-.deerflow-link {
+.magicflow-link {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -920,11 +920,11 @@ a:hover {
   font-size: 0.875rem;
 }
 
-.deerflow-icon {
+.magicflow-icon {
   font-size: 0.875rem;
 }
 
-.deerflow-text {
+.magicflow-text {
   font-family: var(--font-sans);
 }
 
@@ -1050,3 +1050,4 @@ a:hover {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-tertiary);
 }
+

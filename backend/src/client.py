@@ -1,12 +1,12 @@
-"""DeerFlowClient — Embedded Python client for DeerFlow agent system.
+"""magicflowClient �?Embedded Python client for magicflow agent system.
 
-Provides direct programmatic access to DeerFlow's agent capabilities
+Provides direct programmatic access to magicflow's agent capabilities
 without requiring LangGraph Server or Gateway API processes.
 
 Usage:
-    from src.client import DeerFlowClient
+    from src.client import magicflowClient
 
-    client = DeerFlowClient()
+    client = magicflowClient()
     response = client.chat("Analyze this paper for me", thread_id="my-thread")
     print(response)
 
@@ -33,8 +33,6 @@ from langchain.agents import create_agent
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
 from langchain_core.runnables import RunnableConfig
 
-from src.agents.lead_agent.agent import _build_middlewares
-from src.agents.lead_agent.prompt import apply_prompt_template
 from src.agents.thread_state import ThreadState
 from src.config.app_config import get_app_config, reload_app_config
 from src.config.extensions_config import ExtensionsConfig, SkillStateConfig, get_extensions_config, reload_extensions_config
@@ -62,15 +60,15 @@ class StreamEvent:
     data: dict[str, Any] = field(default_factory=dict)
 
 
-class DeerFlowClient:
-    """Embedded Python client for DeerFlow agent system.
+class magicflowClient:
+    """Embedded Python client for magicflow agent system.
 
-    Provides direct programmatic access to DeerFlow's agent capabilities
+    Provides direct programmatic access to magicflow's agent capabilities
     without requiring LangGraph Server or Gateway API processes.
 
     Note:
         Multi-turn conversations require a ``checkpointer``. Without one,
-        each ``stream()`` / ``chat()`` call is stateless — ``thread_id``
+        each ``stream()`` / ``chat()`` call is stateless �?``thread_id``
         is only used for file isolation (uploads / artifacts).
 
         The system prompt (including date, memory, and skills context) is
@@ -80,9 +78,9 @@ class DeerFlowClient:
 
     Example::
 
-        from src.client import DeerFlowClient
+        from src.client import magicflowClient
 
-        client = DeerFlowClient()
+        client = magicflowClient()
 
         # Simple one-shot
         print(client.chat("hello"))
@@ -105,6 +103,9 @@ class DeerFlowClient:
         thinking_enabled: bool = True,
         subagent_enabled: bool = False,
         plan_mode: bool = False,
+        agent_type: str = "lead",
+        db_url: str | None = None,
+        building_id: str | None = None,
     ):
         """Initialize the client.
 
@@ -119,6 +120,9 @@ class DeerFlowClient:
             thinking_enabled: Enable model's extended thinking.
             subagent_enabled: Enable subagent delegation.
             plan_mode: Enable TodoList middleware for plan mode.
+            agent_type: Type of agent to use ("lead" or "sql").
+            db_url: Database connection URL (required for sql agent).
+            building_id: Building ID to query (required for sql agent).
         """
         if config_path is not None:
             reload_app_config(config_path)
@@ -129,8 +133,11 @@ class DeerFlowClient:
         self._thinking_enabled = thinking_enabled
         self._subagent_enabled = subagent_enabled
         self._plan_mode = plan_mode
+        self._agent_type = agent_type
+        self._db_url = db_url
+        self._building_id = building_id
 
-        # Lazy agent — created on first call, recreated when config changes.
+        # Lazy agent �?created on first call, recreated when config changes.
         self._agent = None
         self._agent_config_key: tuple | None = None
 
@@ -171,6 +178,9 @@ class DeerFlowClient:
             "thinking_enabled": overrides.get("thinking_enabled", self._thinking_enabled),
             "is_plan_mode": overrides.get("plan_mode", self._plan_mode),
             "subagent_enabled": overrides.get("subagent_enabled", self._subagent_enabled),
+            "agent_type": overrides.get("agent_type", self._agent_type),
+            "db_url": overrides.get("db_url", self._db_url),
+            "building_id": overrides.get("building_id", self._building_id),
         }
         return RunnableConfig(
             configurable=configurable,
@@ -185,6 +195,7 @@ class DeerFlowClient:
             cfg.get("thinking_enabled"),
             cfg.get("is_plan_mode"),
             cfg.get("subagent_enabled"),
+            cfg.get("agent_type"),
         )
 
         if self._agent is not None and self._agent_config_key == key:
@@ -194,23 +205,35 @@ class DeerFlowClient:
         model_name = cfg.get("model_name")
         subagent_enabled = cfg.get("subagent_enabled", False)
         max_concurrent_subagents = cfg.get("max_concurrent_subagents", 3)
+        agent_type = cfg.get("agent_type", "lead")
 
-        kwargs: dict[str, Any] = {
-            "model": create_chat_model(name=model_name, thinking_enabled=thinking_enabled),
-            "tools": self._get_tools(model_name=model_name, subagent_enabled=subagent_enabled),
-            "middleware": _build_middlewares(config, model_name=model_name),
-            "system_prompt": apply_prompt_template(
-                subagent_enabled=subagent_enabled,
-                max_concurrent_subagents=max_concurrent_subagents,
-            ),
-            "state_schema": ThreadState,
-        }
-        if self._checkpointer is not None:
-            kwargs["checkpointer"] = self._checkpointer
+        # 根据 agent_type 选择相应的 agent 模块
+        if agent_type == "sql":
+            from src.agents.sql_agent.agent import make_sql_agent
+            
+            # make_sql_agent expects a RunnableConfig with db_url and building_id
+            self._agent = make_sql_agent(config)
+        else:  # 默认使用 lead_agent
+            from src.agents.lead_agent.agent import _build_middlewares
+            from src.agents.lead_agent.prompt import apply_prompt_template
+            
+            kwargs: dict[str, Any] = {
+                "model": create_chat_model(name=model_name, thinking_enabled=thinking_enabled),
+                "tools": self._get_tools(model_name=model_name, subagent_enabled=subagent_enabled),
+                "middleware": _build_middlewares(config, model_name=model_name),
+                "system_prompt": apply_prompt_template(
+                    subagent_enabled=subagent_enabled,
+                    max_concurrent_subagents=max_concurrent_subagents,
+                ),
+                "state_schema": ThreadState,
+            }
+            if self._checkpointer is not None:
+                kwargs["checkpointer"] = self._checkpointer
 
-        self._agent = create_agent(**kwargs)
+            self._agent = create_agent(**kwargs)
+
         self._agent_config_key = key
-        logger.info("Agent created: model=%s, thinking=%s", model_name, thinking_enabled)
+        logger.info("Agent created: type=%s, model=%s, thinking=%s", agent_type, model_name, thinking_enabled)
 
     @staticmethod
     def _get_tools(*, model_name: str | None, subagent_enabled: bool):
@@ -257,7 +280,7 @@ class DeerFlowClient:
         return str(content)
 
     # ------------------------------------------------------------------
-    # Public API — conversation
+    # Public API �?conversation
     # ------------------------------------------------------------------
 
     def stream(
@@ -383,7 +406,7 @@ class DeerFlowClient:
         return last_text
 
     # ------------------------------------------------------------------
-    # Public API — configuration queries
+    # Public API �?configuration queries
     # ------------------------------------------------------------------
 
     def list_models(self) -> dict:
@@ -463,7 +486,7 @@ class DeerFlowClient:
         }
 
     # ------------------------------------------------------------------
-    # Public API — MCP configuration
+    # Public API �?MCP configuration
     # ------------------------------------------------------------------
 
     def get_mcp_config(self) -> dict:
@@ -496,7 +519,7 @@ class DeerFlowClient:
         if config_path is None:
             raise FileNotFoundError(
                 "Cannot locate extensions_config.json. "
-                "Set DEER_FLOW_EXTENSIONS_CONFIG_PATH or ensure it exists in the project root."
+                "Set MAGIC_FLOW_EXTENSIONS_CONFIG_PATH or ensure it exists in the project root."
             )
 
         current_config = get_extensions_config()
@@ -513,7 +536,7 @@ class DeerFlowClient:
         return {"mcp_servers": {name: server.model_dump() for name, server in reloaded.mcp_servers.items()}}
 
     # ------------------------------------------------------------------
-    # Public API — skills management
+    # Public API �?skills management
     # ------------------------------------------------------------------
 
     def get_skill(self, name: str) -> dict | None:
@@ -563,7 +586,7 @@ class DeerFlowClient:
         if config_path is None:
             raise FileNotFoundError(
                 "Cannot locate extensions_config.json. "
-                "Set DEER_FLOW_EXTENSIONS_CONFIG_PATH or ensure it exists in the project root."
+                "Set MAGIC_FLOW_EXTENSIONS_CONFIG_PATH or ensure it exists in the project root."
             )
 
         extensions_config = get_extensions_config()
@@ -655,7 +678,7 @@ class DeerFlowClient:
         return {"success": True, "skill_name": skill_name, "message": f"Skill '{skill_name}' installed successfully"}
 
     # ------------------------------------------------------------------
-    # Public API — memory management
+    # Public API �?memory management
     # ------------------------------------------------------------------
 
     def reload_memory(self) -> dict:
@@ -699,7 +722,7 @@ class DeerFlowClient:
         }
 
     # ------------------------------------------------------------------
-    # Public API — file uploads
+    # Public API �?file uploads
     # ------------------------------------------------------------------
 
     @staticmethod
@@ -719,7 +742,7 @@ class DeerFlowClient:
             files: List of local file paths to upload.
 
         Returns:
-            Dict with success, files, message — matching the Gateway API
+            Dict with success, files, message �?matching the Gateway API
             ``UploadResponse`` schema.
 
         Raises:
@@ -836,7 +859,7 @@ class DeerFlowClient:
         return {"success": True, "message": f"Deleted {filename}"}
 
     # ------------------------------------------------------------------
-    # Public API — artifacts
+    # Public API �?artifacts
     # ------------------------------------------------------------------
 
     def get_artifact(self, thread_id: str, path: str) -> tuple[bytes, str]:
@@ -873,3 +896,4 @@ class DeerFlowClient:
 
         mime_type, _ = mimetypes.guess_type(actual)
         return actual.read_bytes(), mime_type or "application/octet-stream"
+

@@ -5,6 +5,19 @@
   ],
   "env": ".env",
   "graphs": {
-    "lead_agent": "src.agents:make_lead_agent"
+    "lead_agent": "src.agents:make_lead_agent",
+    "sql-agent": "src.agents:make_sql_agent"
+  },
+  "agents": {
+    "lead_agent": {
+      "id": "lead_agent",
+      "name": "Lead Agent",
+      "description": "\u901a\u7528\u578b AI \u52a9\u624b\uff0c\u652f\u6301\u591a\u79cd\u4efb\u52a1\u6a21\u5f0f"
+    },
+    "sql-agent": {
+      "id": "sql-agent",
+      "name": "SQL Agent",
+      "description": "\u4e13\u6ce8\u4e8e\u6570\u636e\u5e93\u67e5\u8be2\u548c\u64cd\u4f5c\uff0c\u9002\u5408\u6570\u636e\u76f8\u5173\u4efb\u52a1"
+    }
   }
 }

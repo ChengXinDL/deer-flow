@@ -1,5 +1,5 @@
 [project]
-name = "deer-flow"
+name = "magic-flow"
 version = "0.1.0"
 description = "LangGraph-based AI agent system with sandbox execution capabilities"
 readme = "README.md"
@@ -30,6 +30,8 @@ dependencies = [
     "ddgs>=9.10.0",
     "duckdb>=1.4.4",
     "langchain-google-genai>=4.2.1",
+    "langchain-community>=0.4.1",
+    "mysql-connector-python>=9.0.0",
 ]
 
 [dependency-groups]
