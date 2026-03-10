@@ -1,14 +1,14 @@
 # 🦌 magicflow - 2.0
 
 <a href="https://trendshift.io/repositories/14699" target="_blank"><img src="https://trendshift.io/api/badge/repositories/14699" alt="bytedance%2Fmagic-flow | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
-> On February 28th, 2026, magicflow claimed the 🏆 #1 spot on GitHub Trending following the launch of version 2. Thanks a million to our incredible community �?you made this happen! 💪🔥
+> On February 28th, 2026, magicflow claimed the 🏆 #1 spot on GitHub Trending following the launch of version 2. Thanks a million to our incredible community -- you made this happen! 💪🔥
 
-magicflow (**D**eep **E**xploration and **E**fficient **R**esearch **Flow**) is an open-source **super agent harness** that orchestrates **sub-agents**, **memory**, and **sandboxes** to do almost anything �?powered by **extensible skills**.
+magicflow (**D**eep **E**xploration and **E**fficient **R**esearch **Flow**) is an open-source **super agent harness** that orchestrates **sub-agents**, **memory**, and **sandboxes** to do almost anything -- powered by **extensible skills**.
 
 https://github.com/user-attachments/assets/a8bcadc4-e040-4cf2-8fda-dd768b999c18
 
 > [!NOTE]
-> **magicflow 2.0 is a ground-up rewrite.** It shares no code with v1. If you're looking for the original Deep Research framework, it's maintained on the [`1.x` branch](https://github.com/bytedance/magic-flow/tree/main-1.x) �?contributions there are still welcome. Active development has moved to 2.0.
+> **magicflow 2.0 is a ground-up rewrite.** It shares no code with v1. If you're looking for the original Deep Research framework, it's maintained on the [`1.x` branch](https://github.com/bytedance/magic-flow/tree/main-1.x) -- contributions there are still welcome. Active development has moved to 2.0.
 
 ## Official Website
 
@@ -170,13 +170,13 @@ See the [MCP Server Guide](backend/docs/MCP_SERVER.md) for detailed instructions
 
 ## From Deep Research to Super Agent Harness
 
-magicflow started as a Deep Research framework �?and the community ran with it. Since launch, developers have pushed it far beyond research: building data pipelines, generating slide decks, spinning up dashboards, automating content workflows. Things we never anticipated.
+magicflow started as a Deep Research framework -- and the community ran with it. Since launch, developers have pushed it far beyond research: building data pipelines, generating slide decks, spinning up dashboards, automating content workflows. Things we never anticipated.
 
-That told us something important: magicflow wasn't just a research tool. It was a **harness** �?a runtime that gives agents the infrastructure to actually get work done.
+That told us something important: magicflow wasn't just a research tool. It was a **harness** -- a runtime that gives agents the infrastructure to actually get work done.
 
 So we rebuilt it from scratch.
 
-magicflow 2.0 is no longer a framework you wire together. It's a super agent harness �?batteries included, fully extensible. Built on LangGraph and LangChain, it ships with everything an agent needs out of the box: a filesystem, memory, skills, sandboxed execution, and the ability to plan and spawn sub-agents for complex, multi-step tasks.
+magicflow 2.0 is no longer a framework you wire together. It's a super agent harness -- batteries included, fully extensible. Built on LangGraph and LangChain, it ships with everything an agent needs out of the box: a filesystem, memory, skills, sandboxed execution, and the ability to plan and spawn sub-agents for complex, multi-step tasks.
 
 Use it as-is. Or tear it apart and make it yours.
 
@@ -186,11 +186,11 @@ Use it as-is. Or tear it apart and make it yours.
 
 Skills are what make magicflow do *almost anything*.
 
-A standard Agent Skill is a structured capability module �?a Markdown file that defines a workflow, best practices, and references to supporting resources. magicflow ships with built-in skills for research, report generation, slide creation, web pages, image and video generation, and more. But the real power is extensibility: add your own skills, replace the built-in ones, or combine them into compound workflows.
+A standard Agent Skill is a structured capability module -- a Markdown file that defines a workflow, best practices, and references to supporting resources. magicflow ships with built-in skills for research, report generation, slide creation, web pages, image and video generation, and more. But the real power is extensibility: add your own skills, replace the built-in ones, or combine them into compound workflows.
 
-Skills are loaded progressively �?only when the task needs them, not all at once. This keeps the context window lean and makes magicflow work well even with token-sensitive models.
+Skills are loaded progressively -- only when the task needs them, not all at once. This keeps the context window lean and makes magicflow work well even with token-sensitive models.
 
-Tools follow the same philosophy. magicflow comes with a core toolset �?web search, web fetch, file operations, bash execution �?and supports custom tools via MCP servers and Python functions. Swap anything. Add anything.
+Tools follow the same philosophy. magicflow comes with a core toolset -- web search, web fetch, file operations, bash execution -- and supports custom tools via MCP servers and Python functions. Swap anything. Add anything.
 
 ```
 # Paths inside the sandbox container
@@ -202,48 +202,48 @@ Tools follow the same philosophy. magicflow comes with a core toolset �?web se
 └── image-generation/SKILL.md
 
 /mnt/skills/custom
-└── your-custom-skill/SKILL.md      �?yours
+└── your-custom-skill/SKILL.md      -- yours
 ```
 
 ### Sub-Agents
 
 Complex tasks rarely fit in a single pass. magicflow decomposes them.
 
-The lead agent can spawn sub-agents on the fly �?each with its own scoped context, tools, and termination conditions. Sub-agents run in parallel when possible, report back structured results, and the lead agent synthesizes everything into a coherent output.
+The lead agent can spawn sub-agents on the fly -- each with its own scoped context, tools, and termination conditions. Sub-agents run in parallel when possible, report back structured results, and the lead agent synthesizes everything into a coherent output.
 
-This is how magicflow handles tasks that take minutes to hours: a research task might fan out into a dozen sub-agents, each exploring a different angle, then converge into a single report �?or a website �?or a slide deck with generated visuals. One harness, many hands.
+This is how magicflow handles tasks that take minutes to hours: a research task might fan out into a dozen sub-agents, each exploring a different angle, then converge into a single report -- or a website -- or a slide deck with generated visuals. One harness, many hands.
 
 ### Sandbox & File System
 
 magicflow doesn't just *talk* about doing things. It has its own computer.
 
-Each task runs inside an isolated Docker container with a full filesystem �?skills, workspace, uploads, outputs. The agent reads, writes, and edits files. It executes bash commands and codes. It views images. All sandboxed, all auditable, zero contamination between sessions.
+Each task runs inside an isolated Docker container with a full filesystem -- skills, workspace, uploads, outputs. The agent reads, writes, and edits files. It executes bash commands and codes. It views images. All sandboxed, all auditable, zero contamination between sessions.
 
 This is the difference between a chatbot with tool access and an agent with an actual execution environment.
 
 ```
 # Paths inside the sandbox container
 /mnt/user-data/
-├── uploads/          �?your files
-├── workspace/        �?agents' working directory
-└── outputs/          �?final deliverables
+├── uploads/          -- your files
+├── workspace/        -- agents' working directory
+└── outputs/          -- final deliverables
 ```
 
 ### Context Engineering
 
 **Isolated Sub-Agent Context**: Each sub-agent runs in its own isolated context. This means that the sub-agent will not be able to see the context of the main agent or other sub-agents. This is important to ensure that the sub-agent is able to focus on the task at hand and not be distracted by the context of the main agent or other sub-agents.
 
-**Summarization**: Within a session, magicflow manages context aggressively �?summarizing completed sub-tasks, offloading intermediate results to the filesystem, compressing what's no longer immediately relevant. This lets it stay sharp across long, multi-step tasks without blowing the context window.
+**Summarization**: Within a session, magicflow manages context aggressively -- summarizing completed sub-tasks, offloading intermediate results to the filesystem, compressing what's no longer immediately relevant. This lets it stay sharp across long, multi-step tasks without blowing the context window.
 
 ### Long-Term Memory
 
 Most agents forget everything the moment a conversation ends. magicflow remembers.
 
-Across sessions, magicflow builds a persistent memory of your profile, preferences, and accumulated knowledge. The more you use it, the better it knows you �?your writing style, your technical stack, your recurring workflows. Memory is stored locally and stays under your control.
+Across sessions, magicflow builds a persistent memory of your profile, preferences, and accumulated knowledge. The more you use it, the better it knows you -- your writing style, your technical stack, your recurring workflows. Memory is stored locally and stays under your control.
 
 ## Recommended Models
 
-magicflow is model-agnostic �?it works with any LLM that implements the OpenAI-compatible API. That said, it performs best with models that support:
+magicflow is model-agnostic -- it works with any LLM that implements the OpenAI-compatible API. That said, it performs best with models that support:
 
 - **Long context windows** (100k+ tokens) for deep research and multi-step tasks
 - **Reasoning capabilities** for adaptive planning and complex decomposition
@@ -267,7 +267,7 @@ for event in client.stream("hello"):
     if event.type == "messages-tuple" and event.data.get("type") == "ai":
         print(event.data["content"])
 
-# Configuration & management �?returns Gateway-aligned dicts
+# Configuration & management -- returns Gateway-aligned dicts
 models = client.list_models()        # {"models": [...]}
 skills = client.list_skills()        # {"skills": [...]}
 client.update_skill("web-search", enabled=True)
