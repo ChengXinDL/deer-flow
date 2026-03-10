@@ -19,7 +19,7 @@ def parse_skill_file(skill_file: Path, category: str, relative_path: Path | None
         return None
 
     try:
-        content = skill_file.read_text(encoding="utf-8")
+        content = _read_file_with_fallback_encoding(skill_file)
 
         # Extract YAML front matter
         # Pattern: ---\nkey: value\n---
@@ -63,3 +63,30 @@ def parse_skill_file(skill_file: Path, category: str, relative_path: Path | None
     except Exception as e:
         print(f"Error parsing skill file {skill_file}: {e}")
         return None
+
+
+def _read_file_with_fallback_encoding(file_path: Path) -> str:
+    """
+    Read file content with fallback encoding support.
+    
+    Tries UTF-8 first, then falls back to other common encodings.
+    Replaces invalid characters with a placeholder if all encodings fail.
+    
+    Args:
+        file_path: Path to the file to read
+        
+    Returns:
+        File content as string
+    """
+    encodings = ["utf-8", "utf-8-sig", "gbk", "gb2312", "latin-1"]
+    
+    for encoding in encodings:
+        try:
+            return file_path.read_text(encoding=encoding)
+        except UnicodeDecodeError:
+            continue
+    
+    try:
+        return file_path.read_text(encoding="utf-8", errors="replace")
+    except Exception:
+        return file_path.read_bytes().decode("utf-8", errors="replace")
