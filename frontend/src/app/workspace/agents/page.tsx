@@ -29,7 +29,7 @@ export default function AgentsPage() {
         <p className="text-muted-foreground">选择要使用的 AI Agent 类型</p>
       </WorkspaceHeader>
       <WorkspaceBody>
-        <div className="mx-auto w-full max-w-(--container-width-md) space-y-4">
+        <div className="mx-auto w-full max-w-[--container-width-md] space-y-4">
           <div>
             <label className="text-sm font-medium">当前 Agent</label>
             <p className="text-muted-foreground text-xs mb-4">

@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.config.app_config import get_app_config
 from src.gateway.config import get_gateway_config
-from src.gateway.routers import artifacts, mcp, memory, models, skills, uploads
+from src.gateway.routers import artifacts, auth, mcp, memory, models, skills, uploads
 from src.utils.logging_config import setup_logging, get_logger
 
 # Setup unified logging
@@ -101,6 +101,10 @@ This gateway provides custom endpoints for models, MCP configuration, skills, an
                 "name": "health",
                 "description": "Health check and system status endpoints",
             },
+            {
+                "name": "auth",
+                "description": "User authentication and authorization endpoints",
+            },
         ],
     )
 
@@ -131,6 +135,9 @@ This gateway provides custom endpoints for models, MCP configuration, skills, an
 
     # Uploads API is mounted at /api/threads/{thread_id}/uploads
     app.include_router(uploads.router)
+
+    # Auth API is mounted at /api/auth
+    app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 
     @app.get("/health", tags=["health"])
     async def health_check() -> dict:

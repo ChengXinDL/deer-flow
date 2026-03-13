@@ -14,6 +14,10 @@ import { streamdownPlugins } from "@/core/streamdown/plugins";
 import { pathOfThread } from "@/core/threads/utils";
 import { formatTimeAgo } from "@/core/utils/datetime";
 
+function upperFirst(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 function confidenceToLevelKey(confidence: unknown): {
   key: "veryHigh" | "high" | "normal" | "unknown";
   value?: number;
@@ -168,7 +172,7 @@ export default function MemoryPage() {
         <p className="text-muted-foreground">{t.settings.memory.description}</p>
       </WorkspaceHeader>
       <WorkspaceBody>
-        <div className="mx-auto w-full max-w-(--container-width-md)">
+        <div className="mx-auto w-full max-w-[--container-width-md]">
           {isLoading ? (
             <div className="text-muted-foreground text-sm">{t.common.loading}</div>
           ) : error ? (
@@ -193,6 +197,3 @@ export default function MemoryPage() {
   );
 }
 
-function upperFirst(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}

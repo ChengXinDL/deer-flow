@@ -29,7 +29,7 @@ export default function ToolsPage() {
         <p className="text-muted-foreground">{t.settings.tools.description}</p>
       </WorkspaceHeader>
       <WorkspaceBody>
-        <div className="mx-auto w-full max-w-(--container-width-md)">
+        <div className="mx-auto w-full max-w-[--container-width-md]">
           {isLoading ? (
             <div className="text-muted-foreground text-sm">{t.common.loading}</div>
           ) : error ? (
