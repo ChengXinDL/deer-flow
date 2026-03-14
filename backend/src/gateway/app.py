@@ -8,6 +8,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.config.app_config import get_app_config
 from src.gateway.config import get_gateway_config
 from src.gateway.routers import artifacts, auth, mcp, memory, models, skills, uploads
+from src.gateway.routers.oauth import router as oauth_router
+from src.gateway.routers.auth_db import init_auth_db
 from src.utils.logging_config import setup_logging, get_logger
 
 # Setup unified logging
@@ -29,6 +31,13 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         sys.exit(1)
     config = get_gateway_config()
     logger.info(f"Starting API Gateway on {config.host}:{config.port}")
+    
+    # Initialize auth database tables
+    try:
+        init_auth_db()
+        logger.info("Auth database tables initialized")
+    except Exception as e:
+        logger.error(f"Failed to initialize auth database: {e}")
 
     # NOTE: MCP tools initialization is NOT done here because:
     # 1. Gateway doesn't use MCP tools - they are used by Agents in the LangGraph Server
@@ -138,6 +147,9 @@ This gateway provides custom endpoints for models, MCP configuration, skills, an
 
     # Auth API is mounted at /api/auth
     app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+    
+    # OAuth API is mounted at /api/oauth
+    app.include_router(oauth_router, prefix="/api")
 
     @app.get("/health", tags=["health"])
     async def health_check() -> dict:

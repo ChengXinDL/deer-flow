@@ -6,6 +6,8 @@ import {
   BrainIcon,
   PaletteIcon,
   SparklesIcon,
+  UserIcon,
+  LockIcon,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
@@ -19,10 +21,14 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { AboutSettingsPage } from "@/components/workspace/settings/about-settings-page";
 import { AppearanceSettingsPage } from "@/components/workspace/settings/appearance-settings-page";
 import { NotificationSettingsPage } from "@/components/workspace/settings/notification-settings-page";
+import { ProfileSettingsPage } from "@/components/workspace/settings/profile-settings-page";
+import { SecuritySettingsPage } from "@/components/workspace/settings/security-settings-page";
 import { useI18n } from "@/core/i18n/hooks";
 import { cn } from "@/lib/utils";
 
 type SettingsSection =
+  | "profile"
+  | "security"
   | "appearance"
   | "notification"
   | "about";
@@ -32,7 +38,7 @@ type SettingsDialogProps = React.ComponentProps<typeof Dialog> & {
 };
 
 export function SettingsDialog(props: SettingsDialogProps) {
-  const { defaultSection = "appearance", ...dialogProps } = props;
+  const { defaultSection = "profile", ...dialogProps } = props;
   const { t } = useI18n();
   const [activeSection, setActiveSection] =
     useState<SettingsSection>(defaultSection);
@@ -47,6 +53,16 @@ export function SettingsDialog(props: SettingsDialogProps) {
 
   const sections = useMemo(
     () => [
+      {
+        id: "profile",
+        label: "个人信息",
+        icon: UserIcon,
+      },
+      {
+        id: "security",
+        label: "安全设置",
+        icon: LockIcon,
+      },
       {
         id: "appearance",
         label: t.settings.sections.appearance,
@@ -108,6 +124,8 @@ export function SettingsDialog(props: SettingsDialogProps) {
           </nav>
           <ScrollArea className="h-full min-h-0 rounded-lg border">
             <div className="space-y-8 p-6">
+              {activeSection === "profile" && <ProfileSettingsPage />}
+              {activeSection === "security" && <SecuritySettingsPage />}
               {activeSection === "appearance" && <AppearanceSettingsPage />}
               {activeSection === "notification" && <NotificationSettingsPage />}
               {activeSection === "about" && <AboutSettingsPage />}

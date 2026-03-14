@@ -167,6 +167,16 @@ export async function changePassword(request: ChangePasswordRequest): Promise<Me
 }
 
 /**
+ * 更新用户信息
+ */
+export async function updateUser(data: { name?: string; avatar_url?: string }): Promise<User> {
+  return fetchAPI<User>("/me", {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+}
+
+/**
  * 检查是否已登录
  */
 export function isAuthenticated(): boolean {

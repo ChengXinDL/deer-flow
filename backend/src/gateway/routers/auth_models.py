@@ -39,6 +39,7 @@ class User(Base):
     # Relationships
     refresh_tokens = relationship("RefreshToken", back_populates="user")
     password_reset_tokens = relationship("PasswordResetToken", back_populates="user")
+    oauth_accounts = relationship("OAuthAccount", back_populates="user")
 
 
 class RefreshToken(Base):
@@ -69,3 +70,33 @@ class PasswordResetToken(Base):
     
     # Relationships
     user = relationship("User", back_populates="password_reset_tokens")
+
+
+class OAuthAccount(Base):
+    """OAuth 账号绑定模型"""
+    __tablename__ = "oauth_accounts"
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    user_id = Column(String(36), ForeignKey("users.id"), nullable=False, index=True)
+    provider = Column(String(50), nullable=False)  # github, google, wechat
+    provider_user_id = Column(String(100), nullable=False)
+    access_token = Column(String(500), nullable=True)
+    refresh_token = Column(String(500), nullable=True)
+    created_at = Column(DateTime, default=func.current_timestamp(), nullable=False)
+    updated_at = Column(DateTime, default=func.current_timestamp(), onupdate=func.current_timestamp(), nullable=False)
+    
+    # Relationships
+    user = relationship("User", back_populates="oauth_accounts")
+
+
+class WechatLoginState(Base):
+    """微信登录状态模型"""
+    __tablename__ = "wechat_login_states"
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    state = Column(String(100), unique=True, nullable=False, index=True)
+    qr_code_url = Column(String(500), nullable=False)
+    status = Column(String(20), default='pending', nullable=False)  # pending, scanned, confirmed, expired
+    user_id = Column(String(36), ForeignKey("users.id"), nullable=True)
+    expires_at = Column(DateTime, nullable=False)
+    created_at = Column(DateTime, default=func.current_timestamp(), nullable=False)

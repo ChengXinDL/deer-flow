@@ -1,73 +1,101 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/core/auth";
-import { OAuthButtons } from "@/components/auth/oauth-buttons";
-import { Loader2, Mail, Lock, User, Eye, EyeOff } from "lucide-react";
+import { Loader2, Lock, Eye, EyeOff, CheckCircle } from "lucide-react";
 
-export default function RegisterPage() {
+function ResetPasswordContent() {
   const router = useRouter();
-  const { register, isLoading, error, clearError } = useAuth();
+  const searchParams = useSearchParams();
+  const { resetPassword, isLoading, error, clearError } = useAuth();
   
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [token, setToken] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [agreeTerms, setAgreeTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const tokenParam = searchParams.get("token");
+    if (tokenParam) {
+      setToken(tokenParam);
+    } else {
+      router.push("/auth/forgot-password");
+    }
+  }, [searchParams, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     clearError();
     setValidationError(null);
 
-    // 验证密码
-    if (password !== confirmPassword) {
+    if (newPassword !== confirmPassword) {
       setValidationError("两次输入的密码不一致");
       return;
     }
 
-    if (password.length < 8) {
+    if (newPassword.length < 8) {
       setValidationError("密码长度至少为 8 位");
       return;
     }
 
-    if (!agreeTerms) {
-      setValidationError("请同意服务条款和隐私政策");
-      return;
-    }
-
     try {
-      await register({
-        email,
-        password,
-        name,
-      });
-      
-      // 注册成功，跳转到登录页面
-      router.push("/auth/login?registered=true");
+      await resetPassword({ token, new_password: newPassword });
+      setSuccess(true);
     } catch (err) {
       // 错误已在 hook 中处理
     }
   };
 
+  if (success) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="space-y-1">
+            <div className="flex justify-center mb-4">
+              <CheckCircle className="h-16 w-16 text-green-500" />
+            </div>
+            <CardTitle className="text-2xl font-bold text-center">密码重置成功</CardTitle>
+            <CardDescription className="text-center">
+              您的密码已成功重置
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Alert>
+              <AlertDescription>
+                请使用新密码登录您的账户。
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+          <CardFooter>
+            <Button
+              className="w-full"
+              onClick={() => router.push("/auth/login")}
+            >
+              前往登录
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">注册</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">重置密码</CardTitle>
           <CardDescription className="text-center">
-            创建一个新账号开始使用
+            请输入您的新密码
           </CardDescription>
         </CardHeader>
         
@@ -80,47 +108,15 @@ export default function RegisterPage() {
             )}
             
             <div className="space-y-2">
-              <Label htmlFor="name">用户名</Label>
-              <div className="relative">
-                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="您的用户名"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="pl-10"
-                  required
-                />
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="email">邮箱</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="your@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10"
-                  required
-                />
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="password">密码</Label>
+              <Label htmlFor="new_password">新密码</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-                  id="password"
+                  id="new_password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="至少 8 位密码"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="输入新密码（至少 8 位）"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
                   className="pl-10 pr-10"
                   required
                 />
@@ -139,13 +135,13 @@ export default function RegisterPage() {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">确认密码</Label>
+              <Label htmlFor="confirm_password">确认新密码</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-                  id="confirmPassword"
+                  id="confirm_password"
                   type={showConfirmPassword ? "text" : "password"}
-                  placeholder="再次输入密码"
+                  placeholder="再次输入新密码"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="pl-10 pr-10"
@@ -165,24 +161,6 @@ export default function RegisterPage() {
               </div>
             </div>
             
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="terms"
-                checked={agreeTerms}
-                onCheckedChange={(checked) => setAgreeTerms(checked as boolean)}
-              />
-              <Label htmlFor="terms" className="text-sm font-normal">
-                我同意{" "}
-                <Link href="/terms" className="text-primary hover:underline">
-                  服务条款
-                </Link>{" "}
-                和{" "}
-                <Link href="/privacy" className="text-primary hover:underline">
-                  隐私政策
-                </Link>
-              </Label>
-            </div>
-            
             <Button
               type="submit"
               className="w-full"
@@ -191,26 +169,40 @@ export default function RegisterPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  注册中...
+                  重置中...
                 </>
               ) : (
-                "注册"
+                "重置密码"
               )}
             </Button>
-            
-            <OAuthButtons className="mt-4" />
           </form>
         </CardContent>
         
-        <CardFooter className="flex flex-col space-y-4">
-          <div className="text-sm text-muted-foreground text-center">
-            已有账号？{" "}
-            <Link href="/auth/login" className="text-primary hover:underline">
-              立即登录
-            </Link>
-          </div>
+        <CardFooter>
+          <Link
+            href="/auth/login"
+            className="w-full"
+          >
+            <Button variant="outline" className="w-full">
+              返回登录
+            </Button>
+          </Link>
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-background p-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      }
+    >
+      <ResetPasswordContent />
+    </Suspense>
   );
 }

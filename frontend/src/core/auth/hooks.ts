@@ -38,6 +38,7 @@ interface UseAuthReturn {
   forgotPassword: (request: ForgotPasswordRequest) => Promise<void>;
   resetPassword: (request: ResetPasswordRequest) => Promise<void>;
   changePassword: (request: ChangePasswordRequest) => Promise<void>;
+  refreshUser: () => Promise<void>;
   clearError: () => void;
 }
 
@@ -191,6 +192,20 @@ export function useAuth(): UseAuthReturn {
   }, []);
 
   /**
+   * 刷新用户信息
+   */
+  const refreshUser = useCallback(async () => {
+    try {
+      if (checkIsAuthenticated()) {
+        const userData = await getCurrentUser();
+        setUser(userData);
+      }
+    } catch (err) {
+      console.error("Failed to refresh user:", err);
+    }
+  }, []);
+
+  /**
    * 清除错误
    */
   const clearError = useCallback(() => {
@@ -208,6 +223,7 @@ export function useAuth(): UseAuthReturn {
     forgotPassword,
     resetPassword,
     changePassword,
+    refreshUser,
     clearError,
   };
 }

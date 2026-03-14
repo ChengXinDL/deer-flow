@@ -27,8 +27,10 @@ from src.gateway.routers.auth_schemas import (
     ResetPasswordRequest,
     ChangePasswordRequest,
     UserResponse,
-    MessageResponse
+    MessageResponse,
+    UpdateUserRequest
 )
+from src.gateway.routers.email_service import send_password_reset_email
 
 router = APIRouter()
 
@@ -206,8 +208,9 @@ def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(get_au
     db.add(reset_token)
     db.commit()
     
-    # TODO: 发送邮件或短信（这里需要集成邮件/短信服务）
-    # send_password_reset_email(user.email, token)
+    # 发送密码重置邮件
+    if user.email:
+        send_password_reset_email(user.email, token, user.name)
     
     return MessageResponse(message="如果账号存在，重置链接已发送")
 
@@ -274,3 +277,23 @@ def change_password(
     db.commit()
     
     return MessageResponse(message="密码修改成功")
+
+
+@router.put("/me", response_model=UserResponse)
+def update_user_info(
+    update_data: UpdateUserRequest,
+    db: Session = Depends(get_auth_db),
+    current_user: User = Depends(get_current_active_user)
+):
+    """更新用户信息"""
+    # 更新用户信息
+    if update_data.name is not None:
+        current_user.name = update_data.name
+    if update_data.avatar_url is not None:
+        current_user.avatar_url = update_data.avatar_url
+    
+    current_user.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(current_user)
+    
+    return current_user

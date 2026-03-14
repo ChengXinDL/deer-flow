@@ -85,3 +85,36 @@ class UserResponse(BaseModel):
 class MessageResponse(BaseModel):
     """消息响应"""
     message: str
+
+
+class OAuthCallbackRequest(BaseModel):
+    """OAuth 回调请求"""
+    code: str = Field(..., description="授权码")
+    state: str = Field(..., description="状态参数")
+
+
+class OAuthTokenResponse(BaseModel):
+    """OAuth 令牌响应"""
+    access_token: str = Field(..., description="访问令牌")
+    refresh_token: str = Field(..., description="刷新令牌")
+    token_type: str = Field(default="bearer", description="令牌类型")
+    expires_in: int = Field(..., description="访问令牌过期时间（秒）")
+
+
+class WechatQrCodeResponse(BaseModel):
+    """微信二维码响应"""
+    qr_code_url: str = Field(..., description="二维码URL")
+    state: str = Field(..., description="状态参数")
+    expires_in: int = Field(default=300, description="过期时间（秒）")
+
+
+class WechatStatusResponse(BaseModel):
+    """微信登录状态响应"""
+    status: str = Field(..., description="状态：pending, scanned, confirmed, expired")
+    user: Optional[dict] = Field(None, description="用户信息")
+
+
+class UpdateUserRequest(BaseModel):
+    """更新用户信息请求"""
+    name: Optional[str] = Field(None, min_length=1, max_length=255, description="用户名")
+    avatar_url: Optional[str] = Field(None, max_length=500, description="头像URL")
