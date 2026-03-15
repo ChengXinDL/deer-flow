@@ -1,10 +1,38 @@
 """Configuration for conversation summarization."""
 
+import os
 from typing import Literal
 
 from pydantic import BaseModel, Field
 
 ContextSizeType = Literal["fraction", "tokens", "messages"]
+
+
+def _get_env_bool(key: str, default: bool) -> bool:
+    """Get boolean value from environment variable."""
+    value = os.getenv(key)
+    if value is None:
+        return default
+    return value.lower() in ('true', '1', 'yes', 'y', 't')
+
+
+def _get_env_str(key: str, default: str | None = None) -> str | None:
+    """Get string value from environment variable."""
+    value = os.getenv(key)
+    if value is None:
+        return default
+    return value if value.strip() else default
+
+
+def _get_env_int(key: str, default: int | None = None) -> int | None:
+    """Get integer value from environment variable."""
+    value = os.getenv(key)
+    if value is None:
+        return default
+    try:
+        return int(value)
+    except ValueError:
+        return default
 
 
 class ContextSize(BaseModel):
@@ -22,11 +50,11 @@ class SummarizationConfig(BaseModel):
     """Configuration for automatic conversation summarization."""
 
     enabled: bool = Field(
-        default=False,
+        default=_get_env_bool("SUMMARIZATION_ENABLED", True),
         description="Whether to enable automatic conversation summarization",
     )
     model_name: str | None = Field(
-        default=None,
+        default=_get_env_str("SUMMARIZATION_MODEL_NAME"),
         description="Model name to use for summarization (None = use a lightweight model)",
     )
     trigger: ContextSize | list[ContextSize] | None = Field(
@@ -44,7 +72,7 @@ class SummarizationConfig(BaseModel):
         "{'type': 'fraction', 'value': 0.3} keeps 30% of model's max input tokens",
     )
     trim_tokens_to_summarize: int | None = Field(
-        default=4000,
+        default=_get_env_int("SUMMARIZATION_MAX_TOKENS", 500),
         description="Maximum tokens to keep when preparing messages for summarization. Pass null to skip trimming.",
     )
     summary_prompt: str | None = Field(

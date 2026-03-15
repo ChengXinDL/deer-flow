@@ -1,13 +1,30 @@
 """Configuration for automatic thread title generation."""
 
+import os
 from pydantic import BaseModel, Field
+
+
+def _get_env_bool(key: str, default: bool) -> bool:
+    """Get boolean value from environment variable."""
+    value = os.getenv(key)
+    if value is None:
+        return default
+    return value.lower() in ('true', '1', 'yes', 'y', 't')
+
+
+def _get_env_str(key: str, default: str | None = None) -> str | None:
+    """Get string value from environment variable."""
+    value = os.getenv(key)
+    if value is None:
+        return default
+    return value if value.strip() else default
 
 
 class TitleConfig(BaseModel):
     """Configuration for automatic thread title generation."""
 
     enabled: bool = Field(
-        default=True,
+        default=_get_env_bool("TITLE_GENERATION_ENABLED", True),
         description="Whether to enable automatic title generation",
     )
     max_words: int = Field(
@@ -23,11 +40,11 @@ class TitleConfig(BaseModel):
         description="Maximum number of characters in the generated title",
     )
     model_name: str | None = Field(
-        default=None,
+        default=_get_env_str("TITLE_GENERATION_MODEL_NAME"),
         description="Model name to use for title generation (None = use default model)",
     )
     prompt_template: str = Field(
-        default=("Generate a concise title (max {max_words} words) for this conversation.\nUser: {user_msg}\nAssistant: {assistant_msg}\n\nReturn ONLY the title, no quotes, no explanation."),
+        default=('Generate a concise title (max {max_words} words) for this conversation.\nUser: {user_msg}\nAssistant: {assistant_msg}\n\nReturn ONLY the title, no quotes, no explanation.'),
         description="Prompt template for title generation",
     )
 

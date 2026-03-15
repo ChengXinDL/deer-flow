@@ -90,6 +90,75 @@ magicflow（**D**eep **E**xploration and **E**fficient **R**esearch **Flow，深
          api_key: your-actual-api-key-here  # 替换占位符
      ```
 
+5. **环境变量配置**
+
+   magicflow 支持通过 `.env` 文件配置各种系统参数。以下是所有可用的环境变量配置项：
+
+   #### 核心配置
+   - **MAGIC_FLOW_CONFIG_PATH**：配置文件路径
+   - **DB_URL**：主数据库连接字符串
+   - **BUILDING_ID**：建筑ID
+   - **POSTGRES_URL**：认证数据库连接字符串
+
+   #### 内存配置
+   - **MEMORY_ENABLED**：是否启用内存机制（默认：true）
+   - **MEMORY_STORAGE_PATH**：内存数据存储路径
+   - **MEMORY_DEBOUNCE_SECONDS**：防抖秒数（默认：30）
+   - **MEMORY_MODEL_NAME**：内存更新使用的模型名称
+   - **MEMORY_MAX_FACTS**：最大事实数（默认：100）
+   - **MEMORY_FACT_CONFIDENCE_THRESHOLD**：事实置信度阈值（默认：0.7）
+   - **MEMORY_INJECTION_ENABLED**：是否启用内存注入（默认：true）
+   - **MEMORY_MAX_INJECTION_TOKENS**：最大注入tokens（默认：2000）
+
+   #### 技能配置
+   - **SKILLS_PATH**：技能目录路径
+   - **SKILLS_CONTAINER_PATH**：沙盒容器中技能路径（默认：/mnt/skills）
+
+   #### 沙盒配置
+   - **SANDBOX_USE**：沙盒提供者类路径（默认：src.sandbox.local:LocalSandboxProvider）
+   - **SANDBOX_IMAGE**：Docker镜像（默认：enterprise-public-cn-beijing.cr.volces.com/vefaas-public/all-in-one-sandbox:latest）
+   - **SANDBOX_PORT**：基础端口（默认：8080）
+   - **SANDBOX_BASE_URL**：现有沙盒URL
+   - **SANDBOX_AUTO_START**：是否自动启动（默认：true）
+   - **SANDBOX_CONTAINER_PREFIX**：容器名称前缀（默认：magic-flow-sandbox）
+   - **SANDBOX_IDLE_TIMEOUT**：空闲超时秒数（默认：600）
+
+   #### 子代理配置
+   - **SUBAGENTS_TIMEOUT**：子代理默认超时秒数（默认：300）
+   - **SUBAGENTS_MAX_ATTEMPTS**：最大尝试次数（默认：3）
+
+   #### 摘要配置
+   - **SUMMARIZATION_ENABLED**：是否启用摘要（默认：true）
+   - **SUMMARIZATION_MODEL_NAME**：摘要模型名称
+   - **SUMMARIZATION_MAX_TOKENS**：最大tokens数（默认：500）
+
+   #### 标题生成配置
+   - **TITLE_GENERATION_ENABLED**：是否启用标题生成（默认：true）
+   - **TITLE_GENERATION_MODEL_NAME**：标题生成模型名称
+
+   **配置优先级**：环境变量配置优先于默认值，配置文件配置优先于环境变量。
+
+   **示例 .env 文件**：
+
+   ```bash
+   # API Keys
+   TAVILY_API_KEY=tvly-dev-xxx
+   OPENAI_API_KEY=sk-xxx
+   DEEPSEEK_API_KEY=sk-xxx
+
+   # Database
+   DB_URL=mysql+mysqlconnector://user:pass@localhost:3306/db
+   POSTGRES_URL=postgresql://user:pass@localhost:5432/db
+
+   # Memory
+   MEMORY_ENABLED=true
+   MEMORY_MAX_FACTS=100
+
+   # Sandbox
+   SANDBOX_USE=src.sandbox.local:LocalSandboxProvider
+   SANDBOX_AUTO_START=true
+   ```
+
 ### 运行应用
 
 #### 方式一：Docker（推荐）

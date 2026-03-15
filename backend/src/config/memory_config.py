@@ -1,5 +1,6 @@
 """Configuration for memory mechanism."""
 
+import os
 from pydantic import BaseModel, Field
 
 
@@ -57,8 +58,54 @@ class MemoryConfig(BaseModel):
     )
 
 
+def _get_env_bool(key: str, default: bool) -> bool:
+    """Get boolean value from environment variable."""
+    value = os.getenv(key)
+    if value is None:
+        return default
+    return value.lower() in ('true', '1', 'yes', 'y', 't')
+
+
+def _get_env_int(key: str, default: int) -> int:
+    """Get integer value from environment variable."""
+    value = os.getenv(key)
+    if value is None:
+        return default
+    try:
+        return int(value)
+    except ValueError:
+        return default
+
+def _get_env_float(key: str, default: float) -> float:
+    """Get float value from environment variable."""
+    value = os.getenv(key)
+    if value is None:
+        return default
+    try:
+        return float(value)
+    except ValueError:
+        return default
+
+
+def _get_env_str(key: str, default: str | None = None) -> str | None:
+    """Get string value from environment variable."""
+    value = os.getenv(key)
+    if value is None:
+        return default
+    return value if value.strip() else default
+
+
 # Global configuration instance
-_memory_config: MemoryConfig = MemoryConfig()
+_memory_config: MemoryConfig = MemoryConfig(
+    enabled=_get_env_bool("MEMORY_ENABLED", True),
+    storage_path=_get_env_str("MEMORY_STORAGE_PATH", ""),
+    debounce_seconds=_get_env_int("MEMORY_DEBOUNCE_SECONDS", 30),
+    model_name=_get_env_str("MEMORY_MODEL_NAME"),
+    max_facts=_get_env_int("MEMORY_MAX_FACTS", 100),
+    fact_confidence_threshold=_get_env_float("MEMORY_FACT_CONFIDENCE_THRESHOLD", 0.7),
+    injection_enabled=_get_env_bool("MEMORY_INJECTION_ENABLED", True),
+    max_injection_tokens=_get_env_int("MEMORY_MAX_INJECTION_TOKENS", 2000)
+)
 
 
 def get_memory_config() -> MemoryConfig:

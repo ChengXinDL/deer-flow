@@ -1,10 +1,22 @@
 """Configuration for the subagent system loaded from config.yaml."""
 
 import logging
+import os
 
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
+
+
+def _get_env_int(key: str, default: int) -> int:
+    """Get integer value from environment variable."""
+    value = os.getenv(key)
+    if value is None:
+        return default
+    try:
+        return int(value)
+    except ValueError:
+        return default
 
 
 class SubagentOverrideConfig(BaseModel):
@@ -21,9 +33,9 @@ class SubagentsAppConfig(BaseModel):
     """Configuration for the subagent system."""
 
     timeout_seconds: int = Field(
-        default=900,
+        default=_get_env_int("SUBAGENTS_TIMEOUT", 300),
         ge=1,
-        description="Default timeout in seconds for all subagents (default: 900 = 15 minutes)",
+        description="Default timeout in seconds for all subagents (default: 300 = 5 minutes)",
     )
     agents: dict[str, SubagentOverrideConfig] = Field(
         default_factory=dict,

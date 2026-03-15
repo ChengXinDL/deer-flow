@@ -1,17 +1,26 @@
+import os
 from pathlib import Path
 
 from pydantic import BaseModel, Field
+
+
+def _get_env_str(key: str, default: str | None = None) -> str | None:
+    """Get string value from environment variable."""
+    value = os.getenv(key)
+    if value is None:
+        return default
+    return value if value.strip() else default
 
 
 class SkillsConfig(BaseModel):
     """Configuration for skills system"""
 
     path: str | None = Field(
-        default=None,
+        default=_get_env_str("SKILLS_PATH"),
         description="Path to skills directory. If not specified, defaults to ../skills relative to backend directory",
     )
     container_path: str = Field(
-        default="/mnt/skills",
+        default=_get_env_str("SKILLS_CONTAINER_PATH", "/mnt/skills"),
         description="Path where skills are mounted in the sandbox container",
     )
 
